@@ -1,0 +1,490 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Notice — VORTEX Control</title>
+<meta name="description" content="Notice d'utilisation de VORTEX Control : bien démarrer, ventilateurs, courbes, profils, écrans, surveillance, automatisme, questions fréquentes.">
+<meta name="theme-color" content="#05080f">
+<meta name="color-scheme" content="dark">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2300e5ff' stroke-width='1.6' stroke-linejoin='round'%3E%3Cpath d='M12,1.8 L20.8,6.9 L20.8,17.1 L12,22.2 L3.2,17.1 L3.2,6.9 Z M8,9 L12,15.6 L16,9'/%3E%3C/svg%3E">
+<style>
+  :root {
+    --bg: #05080f; --card: rgba(13, 22, 40, .78); --card-hi: rgba(17, 29, 52, .9);
+    --line: rgba(122, 162, 222, .15); --line-hi: rgba(0, 229, 255, .38);
+    --cyan: #00e5ff; --magenta: #ff2bd6; --violet: #7b5cff; --amber: #ffb224; --green: #2bffa3;
+    --text: #e8f0ff; --dim: #a6b5d1; --mute: #7b8cab;
+    --font: "Segoe UI Variable Text", "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+    --display: "Segoe UI Variable Display", "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+    --tech: Bahnschrift, "Segoe UI", system-ui, sans-serif;
+    --ease: cubic-bezier(.2, .7, .2, 1);
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; scroll-padding-top: 88px; -webkit-text-size-adjust: 100%; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.65 var(--font); overflow-x: hidden; }
+  body::before { content: ""; position: fixed; inset: -20vmax; z-index: -2; pointer-events: none; background: radial-gradient(38vmax 30vmax at 78% 12%, rgba(123, 92, 255, .18), transparent 70%), radial-gradient(34vmax 28vmax at 12% 8%, rgba(0, 229, 255, .12), transparent 70%); animation: drift 28s ease-in-out infinite alternate; }
+  body::after { content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none; background: linear-gradient(rgba(0, 229, 255, .045) 1px, transparent 1px) 0 0 / 44px 44px, linear-gradient(90deg, rgba(0, 229, 255, .045) 1px, transparent 1px) 0 0 / 44px 44px; -webkit-mask-image: radial-gradient(ellipse 90% 60% at 50% 0%, #000 30%, transparent 85%); mask-image: radial-gradient(ellipse 90% 60% at 50% 0%, #000 30%, transparent 85%); }
+  @keyframes drift { to { transform: translate3d(4vmax, 3vmax, 0) rotate(8deg); } }
+  a { color: var(--cyan); text-underline-offset: 3px; }
+  code { font-family: "Cascadia Mono", Consolas, monospace; font-size: .88em; color: var(--cyan); background: rgba(0, 229, 255, .07); border-radius: 5px; padding: 1px 4px; overflow-wrap: anywhere; }
+  .wrap { width: min(1180px, 100% - 40px); margin-inline: auto; }
+  .ic { width: 22px; height: 22px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+  .skip { position: absolute; left: 12px; top: -60px; z-index: 100; background: var(--cyan); color: #021016; padding: 10px 16px; border-radius: 8px; font-weight: 700; }
+  .skip:focus { top: 12px; }
+  :focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; border-radius: 6px; }
+
+  .top { position: sticky; top: 0; z-index: 50; transition: background .3s, border-color .3s, box-shadow .3s; border-bottom: 1px solid transparent; }
+  .top.scrolled { background: rgba(5, 8, 15, .78); -webkit-backdrop-filter: blur(14px) saturate(140%); backdrop-filter: blur(14px) saturate(140%); border-bottom-color: var(--line); box-shadow: 0 10px 30px rgba(0, 0, 0, .25); }
+  .top .wrap { display: flex; align-items: center; gap: 20px; height: 68px; }
+  .brand { display: flex; align-items: center; gap: 11px; color: var(--text); text-decoration: none; font: 700 15px/1 var(--tech); letter-spacing: .14em; margin-right: auto; }
+  .brand svg { width: 30px; height: 30px; filter: drop-shadow(0 0 8px rgba(0, 229, 255, .5)); }
+  .menu { display: flex; align-items: center; gap: 4px; }
+  .menu a:not(.btn) { color: var(--dim); text-decoration: none; font-size: 14.5px; padding: 8px 12px; border-radius: 8px; transition: color .2s, background .2s; }
+  .menu a:not(.btn):hover, .menu a[aria-current] { color: var(--text); background: rgba(255, 255, 255, .05); }
+  .menu .btn { margin-left: 10px; }
+  .burger { display: none; background: none; border: 1px solid var(--line); color: var(--text); width: 42px; height: 42px; border-radius: 10px; cursor: pointer; place-items: center; }
+  .btn { position: relative; display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 15px 26px; border-radius: 12px; font: 650 16px/1.1 var(--font); text-decoration: none; transition: transform .25s var(--ease), box-shadow .25s; overflow: hidden; isolation: isolate; }
+  .btn-main { color: #021016; background: linear-gradient(100deg, var(--cyan), #57b6ff 55%, #8f8bff); box-shadow: 0 8px 30px rgba(0, 229, 255, .35), inset 0 1px 0 rgba(255, 255, 255, .45); }
+  .btn-main:hover { transform: translateY(-2px); box-shadow: 0 14px 40px rgba(0, 229, 255, .5), inset 0 1px 0 rgba(255, 255, 255, .45); }
+  .btn-sm { padding: 10px 16px; font-size: 14px; border-radius: 10px; }
+
+  .page-head { padding: 52px 0 34px; max-width: 820px; }
+  .kicker { display: inline-block; font: 700 12.5px/1 var(--tech); letter-spacing: .22em; color: var(--cyan); text-transform: uppercase; margin-bottom: 14px; }
+  h1 { font: 700 clamp(2.2rem, 4.4vw, 3.4rem)/1.06 var(--display); letter-spacing: -.03em; margin: 0 0 16px; }
+  .grad { background: linear-gradient(95deg, var(--cyan) 0%, #7fa8ff 45%, var(--magenta) 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .lead { color: var(--dim); font-size: 1.1rem; margin: 0; }
+
+  /* Notice : sommaire collant et chapitres en cartes */
+  .layout { display: grid; grid-template-columns: 270px minmax(0, 1fr); gap: 32px; align-items: start; }
+  .toc { position: sticky; top: 88px; max-height: calc(100vh - 110px); overflow-y: auto; border: 1px solid var(--line); border-radius: 16px; background: rgba(8, 13, 25, .85); padding: 12px 8px; scrollbar-width: thin; scrollbar-color: var(--line-hi) transparent; }
+  .toc ol { margin: 0; padding: 0; list-style: none; counter-reset: c; }
+  .toc li { counter-increment: c; }
+  .toc a { display: flex; gap: 10px; padding: 8px 12px; color: var(--dim); text-decoration: none; border-radius: 10px; font-size: 14.5px; line-height: 1.35; transition: color .2s, background .2s; }
+  .toc a::before { content: counter(c, decimal-leading-zero); flex: none; font: 700 12px/1.6 var(--tech); color: var(--mute); }
+  .toc a:hover { color: var(--text); background: rgba(255, 255, 255, .05); }
+  .toc a.on { color: var(--text); background: linear-gradient(90deg, rgba(0, 229, 255, .16), rgba(123, 92, 255, .08)); box-shadow: inset 2px 0 0 var(--cyan); }
+  .toc a.on::before { color: var(--cyan); }
+  main section { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 30px 34px; margin-bottom: 18px; }
+  main h2 { font: 700 clamp(1.4rem, 2.4vw, 1.75rem)/1.2 var(--display); letter-spacing: -.015em; margin: 0 0 16px; }
+  main h3 { color: var(--cyan); font: 650 1.05rem/1.3 var(--display); margin: 24px 0 8px; }
+  main p { margin: 0 0 12px; color: var(--dim); }
+  main p:last-child { margin-bottom: 0; }
+  main ul { margin: 0 0 14px; padding: 0; list-style: none; }
+  main li { position: relative; padding-left: 24px; margin-bottom: 8px; color: var(--dim); }
+  main li::before { content: ""; position: absolute; left: 6px; top: .6em; width: 7px; height: 7px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 8px rgba(0, 229, 255, .7); }
+
+  footer { margin-top: 80px; border-top: 1px solid var(--line); padding: 44px 0 56px; color: var(--mute); font-size: 14px; }
+  .foot { display: grid; grid-template-columns: 1.3fr 1fr 1fr; gap: 32px; margin-bottom: 30px; }
+  .foot h4 { color: var(--text); font: 650 14px/1 var(--display); margin: 4px 0 14px; letter-spacing: .02em; }
+  .foot ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
+  .foot a { color: var(--dim); text-decoration: none; }
+  .foot a:hover { color: var(--cyan); }
+  .foot p { margin: 12px 0 0; max-width: 30em; }
+  .legal { border-top: 1px solid var(--line); padding-top: 22px; font-size: 13px; line-height: 1.7; }
+  [hidden] { display: none !important; }
+
+  @media (max-width: 900px) {
+    .layout { grid-template-columns: 1fr; gap: 18px; }
+    .toc { top: 68px; z-index: 20; max-height: none; overflow-x: auto; overflow-y: hidden; border-radius: 0; margin: 0 -20px; padding: 10px 20px; border-width: 1px 0; background: rgba(5, 8, 15, .92); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); scrollbar-width: none; }
+    .toc::-webkit-scrollbar { display: none; }
+    .toc ol { display: flex; gap: 8px; width: max-content; }
+    .toc a { white-space: nowrap; border: 1px solid var(--line); border-radius: 999px; padding: 7px 14px; font-size: 14px; }
+    .toc a.on { box-shadow: none; border-color: var(--line-hi); }
+    html { scroll-padding-top: 140px; }
+  }
+  @media (max-width: 860px) {
+    .burger { display: grid; }
+    .menu { position: absolute; top: 68px; left: 0; right: 0; flex-direction: column; align-items: stretch; gap: 2px; padding: 12px 20px 20px; background: rgba(5, 8, 15, .96); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); border-bottom: 1px solid var(--line); transform: translateY(-8px); opacity: 0; visibility: hidden; transition: opacity .25s, transform .25s, visibility .25s; }
+    .menu.open { transform: none; opacity: 1; visibility: visible; }
+    .menu a:not(.btn) { padding: 12px 10px; font-size: 16px; }
+    .menu .btn { margin: 8px 0 0; }
+    .foot { grid-template-columns: 1fr 1fr; }
+    .foot > div:first-child { grid-column: 1 / -1; }
+  }
+  @media (max-width: 560px) {
+    .wrap { width: calc(100% - 32px); }
+    .toc { margin: 0 -16px; padding: 10px 16px; }
+    main section { padding: 22px 20px; }
+    .foot { grid-template-columns: 1fr; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#contenu">Aller au contenu</a>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-down" viewBox="0 0 24 24"><path d="M12 3.5v11.5M7 10.5l5 5 5-5M5 20.5h14"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+</svg>
+
+<header class="top" id="top">
+  <div class="wrap">
+    <a class="brand" href="index.html" aria-label="VORTEX Control, accueil">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#00e5ff" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M12,1.8 L20.8,6.9 L20.8,17.1 L12,22.2 L3.2,17.1 L3.2,6.9 Z M8,9 L12,15.6 L16,9"/></svg>
+      VORTEX CONTROL
+    </a>
+    <button class="burger" type="button" aria-expanded="false" aria-controls="menu" aria-label="Ouvrir le menu"><svg class="ic"><use href="#i-menu"/></svg></button>
+    <nav class="menu" id="menu" aria-label="Menu principal">
+      <a href="index.html#fonctions">Fonctions</a>
+      <a href="index.html#captures">Captures</a>
+      <a href="index.html#installer">Installer</a>
+      <a href="index.html#questions">Questions</a>
+      <a href="notice.html" aria-current="page">Notice</a>
+      <a href="index.html#soutenir" data-soutien hidden>Soutenir</a>
+      <a class="btn btn-main btn-sm" href="https://github.com/Rafale-78/vortex-control/releases/download/v2.0.1/VORTEX-Control-Setup-2.0.1.exe"><svg class="ic"><use href="#i-down"/></svg>Télécharger</a>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap" id="contenu">
+  <div class="page-head">
+    <span class="kicker">Notice d'utilisation</span>
+    <h1>Tout savoir sur <span class="grad">VORTEX</span></h1>
+    <p class="lead">Cette notice est identique à celle intégrée à VORTEX (bouton AIDE en haut de chaque page). Version 2.0.1.</p>
+  </div>
+
+  <div class="layout">
+    <nav class="toc" aria-label="Sommaire">
+      <ol>
+        <li><a href="#start">Bien d&#233;marrer en 2 minutes</a></li>
+        <li><a href="#home">L&#39;accueil</a></li>
+        <li><a href="#fans">Les ventilateurs</a></li>
+        <li><a href="#curves">Courbes et courbe mixte</a></li>
+        <li><a href="#expert">Le mode expert</a></li>
+        <li><a href="#profiles">Les profils</a></li>
+        <li><a href="#displays">Les &#233;crans</a></li>
+        <li><a href="#monitoring">Surveillance&#160;: capteurs, historique, usure</a></li>
+        <li><a href="#automation">Automatisme</a></li>
+        <li><a href="#safety">S&#233;curit&#233; et alertes</a></li>
+        <li><a href="#troubleshoot">D&#233;pannage</a></li>
+        <li><a href="#updates">R&#233;glages, mises &#224; jour et aide</a></li>
+        <li><a href="#faq">Questions fr&#233;quentes</a></li>
+      </ol>
+    </nav>
+    <main>
+      <section id="start"><h2>Bien d&#233;marrer en 2 minutes</h2>
+        <p>VORTEX r&#232;gle vos ventilateurs et vos &#233;crans &#224; votre place. Trois &#233;tapes suffisent pour commencer&#160;:</p>
+        <ul>
+          <li>Ouvrez l&#39;Accueil et choisissez un profil&#160;: Silencieux, &#201;quilibr&#233; ou Performance. VORTEX s&#39;occupe du reste.</li>
+          <li>Consultez le score de fra&#238;cheur&#160;: au-dessus de 75, votre PC est bien refroidi.</li>
+          <li>Laissez VORTEX actif pr&#232;s de l&#39;horloge&#160;: quand il est ferm&#233;, les ventilateurs reviennent au BIOS.</li>
+        </ul>
+        <h3>Pour aller plus loin</h3>
+        <ul>
+          <li>Ventilateurs&#160;: un mode par ventilateur, et PERSONNALISER pour les r&#233;glages fins.</li>
+          <li>&#201;crans&#160;: luminosit&#233;, contraste et teinte de chaque &#233;cran.</li>
+          <li>Automatisme&#160;: changement de profil automatique selon le jeu lanc&#233; ou l&#39;heure.</li>
+        </ul>
+        <p>Le bouton AIDE, en haut de chaque page, ouvre directement le chapitre correspondant de cette notice.</p>
+      </section>
+      <section id="home"><h2>L&#39;accueil</h2>
+        <p>L&#39;accueil pr&#233;sente l&#39;&#233;tat de votre PC en un coup d&#39;œil.</p>
+        <h3>L&#39;h&#233;lice et le score</h3>
+        <p>L&#39;h&#233;lice tourne &#224; la vitesse moyenne de vos ventilateurs et prend la couleur de l&#39;&#233;tat du PC&#160;: cyan au frais, vert en activit&#233;, ambre quand la temp&#233;rature monte, rouge en alerte.</p>
+        <p>Le score de fra&#238;cheur va de 100 (bien refroidi) &#224; 0 (seuil critique)&#160;; 50 correspond au seuil d&#39;alerte d&#233;fini dans les R&#233;glages.</p>
+        <h3>Profil des ventilateurs</h3>
+        <p>Chaque tuile applique un profil &#224; tous les ventilateurs pilotables. La tuile allum&#233;e correspond au profil en cours. Vos profils personnels apparaissent &#233;galement ici.</p>
+        <h3>Raccourcis</h3>
+        <ul>
+          <li>BOOST 60 SECONDES&#160;: tous les ventilateurs pilotables &#224; 100 % pendant une minute.</li>
+          <li>TESTER LE REFROIDISSEMENT&#160;: ouvre le test de refroidissement (2 &#224; 5 minutes).</li>
+          <li>Luminosit&#233;&#160;: un curseur pour tous les &#233;crans compatibles, et les profils Bureau, Jeu, Film et Nuit.</li>
+        </ul>
+        <h3>&#201;tat de sant&#233;</h3>
+        <p>Les lignes Ventilateurs, Disques, Usure et D&#233;pannage m&#232;nent &#224; la page d&#233;taill&#233;e correspondante. Une nouvelle astuce s&#39;affiche &#224; chaque lancement.</p>
+      </section>
+      <section id="fans"><h2>Les ventilateurs</h2>
+        <p>Chaque carte repr&#233;sente un connecteur de ventilateur&#160;: la vitesse en tours par minute au centre, la temp&#233;rature suivie en haut &#224; droite. Sous le nom de la carte, le connecteur de la carte m&#232;re s&#39;affiche quand il est connu, suivi de la puce qui le g&#232;re (par exemple &#171;&#160;CPU_FAN &#183; Nuvoton NCT6798D&#160;&#187;).</p>
+        <h3>Les sept modes</h3>
+        <ul>
+          <li>AUTO&#160;: le BIOS de la carte m&#232;re d&#233;cide, comme sans VORTEX.</li>
+          <li>MANUEL&#160;: une vitesse fixe, au curseur ou en un clic (30, 50, 75, 100 %).</li>
+          <li>COURBE&#160;: la vitesse suit une temp&#233;rature. Trois pr&#233;r&#233;glages en un clic&#160;: Silencieux, &#201;quilibr&#233;, Performance.</li>
+          <li>MIXTE&#160;: la vitesse suit plusieurs temp&#233;ratures &#224; la fois (jusqu&#39;&#224; 4 courbes)&#160;: la plus exigeante l&#39;emporte, ou bien la plus lente, leur moyenne ou leur somme.</li>
+          <li>PALIER&#160;: deux vitesses seulement, &#171;&#160;repos&#160;&#187; sous un seuil bas et &#171;&#160;charge&#160;&#187; d&#232;s un seuil haut. Le niveau sonore change rarement.</li>
+          <li>CIBLE&#160;: vous choisissez une temp&#233;rature &#224; ne pas d&#233;passer, VORTEX recherche automatiquement la vitesse la plus basse qui la respecte.</li>
+          <li>SYNCHRO&#160;: le ventilateur copie la vitesse d&#39;un autre, avec un d&#233;calage. Pratique pour des ventilateurs de bo&#238;tier qui doivent tourner ensemble.</li>
+        </ul>
+        <p>Sous le s&#233;lecteur, une phrase rappelle le r&#244;le du mode choisi.</p>
+        <h3>Personnaliser</h3>
+        <p>PERSONNALISER ouvre les r&#233;glages fins de la carte&#160;: la courbe, la temp&#233;rature suivie, la r&#233;activit&#233;, la vitesse minimale et l&#39;arr&#234;t complet au repos. Le MODE EXPERT (en haut de la page, ou dans les R&#233;glages) les affiche sur toutes les cartes &#224; la fois.</p>
+        <h3>Outils pratiques</h3>
+        <ul>
+          <li>IDENTIFIER fait tourner le ventilateur &#224; pleine vitesse pendant 3 secondes pour le rep&#233;rer dans le bo&#238;tier.</li>
+          <li>Cliquez sur le nom d&#39;une carte pour le modifier.</li>
+          <li>VITESSE MINIMALE → MESURER&#160;: VORTEX recherche la vitesse sous laquelle ce ventilateur cale, et ne descend jamais en dessous.</li>
+        </ul>
+        <h3>Un ventilateur manque&#160;?</h3>
+        <p>Les ventilateurs que VORTEX peut seulement lire et les connecteurs sans signal sont repli&#233;s en bas de la page, dans le groupe VENTILATEURS NON PILOTABLES ET CONNECTEURS LIBRES&#160;: activez AFFICHER pour les voir. Un ventilateur pilotable qui a d&#233;j&#224; tourn&#233; reste dans la liste principale, m&#234;me &#224; l&#39;arr&#234;t.</p>
+      </section>
+      <section id="curves"><h2>Courbes et courbe mixte</h2>
+        <p>Une courbe d&#233;finit la vitesse du ventilateur pour chaque temp&#233;rature&#160;: &#224; gauche les basses temp&#233;ratures, &#224; droite les hautes.</p>
+        <h3>Modifier une courbe</h3>
+        <ul>
+          <li>Ouvrez PERSONNALISER sur la carte.</li>
+          <li>Choisissez la temp&#233;rature &#224; suivre dans la liste SUIT&#160;: processeur, carte graphique, disque, carte m&#232;re, sonde personnalis&#233;e ou sonde HWiNFO…</li>
+          <li>D&#233;placez les points &#224; la souris. Le rep&#232;re rose indique la temp&#233;rature actuelle et la vitesse correspondante.</li>
+          <li>Un pr&#233;r&#233;glage (Silencieux, &#201;quilibr&#233;, Performance) applique une courbe pr&#234;te &#224; l&#39;emploi.</li>
+        </ul>
+        <h3>R&#233;glages fins</h3>
+        <ul>
+          <li>R&#201;ACTIVIT&#201;&#160;: lente, la vitesse varie en douceur et le bruit reste stable&#160;; rapide, elle suit la temp&#233;rature au plus pr&#232;s.</li>
+          <li>ARR&#202;T SOUS&#160;: le ventilateur s&#39;arr&#234;te compl&#232;tement tant que la temp&#233;rature reste sous ce seuil.</li>
+          <li>VITESSE MINIMALE&#160;: le ventilateur ne descend jamais plus bas, sauf arr&#234;t volontaire.</li>
+        </ul>
+        <h3>La courbe mixte</h3>
+        <p>Jusqu&#39;&#224; quatre courbes, chacune sur sa propre temp&#233;rature&#160;: la courbe A suit par exemple le processeur, la courbe B la carte graphique. + COURBE en ajoute une, ✕ en retire une.</p>
+        <p>COMBINAISON d&#233;finit la fa&#231;on de les r&#233;unir&#160;: MAX (la plus rapide l&#39;emporte, comportement d&#39;origine), MIN (la plus lente), MOY. (leur moyenne) ou SOMME (plafonn&#233;e &#224; 100 %).</p>
+        <p>La ligne R&#201;SULTAT indique la vitesse demand&#233;e par chaque courbe et la vitesse retenue&#160;; avec MAX ou MIN, le cadre de la courbe qui commande s&#39;allume en cyan.</p>
+      </section>
+      <section id="expert"><h2>Le mode expert</h2>
+        <p>Le MODE EXPERT (en haut de la page Ventilateurs, ou R&#233;glages → Affichage) affiche tous les r&#233;glages &#224; la fois et en ajoute de plus avanc&#233;s. Chaque groupe de r&#233;glages dispose d&#39;un bouton PAR D&#201;FAUT qui r&#233;tablit les valeurs d&#39;origine.</p>
+        <h3>Sur chaque carte (selon le mode)</h3>
+        <ul>
+          <li>D&#201;CALAGE&#160;: ajoute ou retire jusqu&#39;&#224; 30 % &#224; la vitesse donn&#233;e par la courbe, sans la redessiner.</li>
+          <li>VITESSE MAXIMALE&#160;: plafond en fonctionnement normal, pour limiter le bruit. La s&#233;curit&#233; thermique, le boost et IDENTIFIER ne sont pas soumis &#224; ce plafond.</li>
+          <li>HYST&#201;R&#201;SIS&#160;: baisse de temp&#233;rature &#224; attendre avant de ralentir (2 &#176;C par d&#233;faut).</li>
+          <li>LISSAGE&#160;: moyenne de la temp&#233;rature sur quelques secondes, pour ignorer les pointes br&#232;ves.</li>
+          <li>ACC&#201;L&#201;RATION MAX et RALENTISSEMENT MAX&#160;: en % par seconde&#160;; AUTO suit la r&#233;activit&#233; choisie.</li>
+          <li>IMPULSION AU D&#201;MARRAGE&#160;: apr&#232;s un arr&#234;t, le ventilateur re&#231;oit cette vitesse pendant 2 secondes pour garantir son red&#233;marrage.</li>
+          <li>COUPER SOUS&#160;: une vitesse demand&#233;e inf&#233;rieure &#224; ce seuil devient un arr&#234;t complet (pour les ventilateurs qui sifflent ou calent &#224; tr&#232;s basse vitesse).</li>
+          <li>RED&#201;MARRAGE APR&#200;S ARR&#202;T&#160;: marge au-dessus du seuil ARR&#202;T SOUS avant de repartir.</li>
+          <li>POINTS DE LA COURBE&#160;: saisie de chaque point au clavier, AJOUTER UN POINT (12 au maximum) et ✕ pour en retirer un.</li>
+        </ul>
+        <h3>&#201;crans</h3>
+        <p>Chaque carte d&#39;&#233;cran affiche la PLAGE DE LUMINOSIT&#201;, le masquage et la COMMANDE DDC/CI (lecture et envoi d&#39;un code VCP).</p>
+        <h3>Dans les R&#233;glages</h3>
+        <p>La carte R&#201;GLAGES AVANC&#201;S r&#232;gle la s&#233;curit&#233; thermique (d&#233;clenchement, marge et dur&#233;e de rel&#226;chement) et les alertes (d&#233;lai avant notification, intervalle entre deux alertes identiques).</p>
+      </section>
+      <section id="profiles"><h2>Les profils</h2>
+        <p>Un profil r&#232;gle tous les ventilateurs pilotables en une seule fois.</p>
+        <h3>Les profils pr&#233;d&#233;finis</h3>
+        <ul>
+          <li>Silencieux&#160;: le moins de bruit possible.</li>
+          <li>&#201;quilibr&#233;&#160;: le meilleur compromis au quotidien.</li>
+          <li>Performance&#160;: le meilleur refroidissement, pour le jeu et les calculs intensifs.</li>
+          <li>Auto (BIOS)&#160;: rend la main &#224; la carte m&#232;re.</li>
+        </ul>
+        <h3>Vos profils personnels</h3>
+        <p>R&#233;glez vos ventilateurs &#224; votre convenance, puis ouvrez G&#201;RER LES PROFILS&#160;: saisissez un nom (&#171;&#160;Jeu&#160;&#187;, &#171;&#160;Nuit&#160;&#187;…) et cliquez sur ENREGISTRER. Le profil retient le r&#233;glage complet de chaque ventilateur.</p>
+        <h3>Mode d&#39;alimentation Windows</h3>
+        <p>Dans G&#201;RER LES PROFILS, chaque profil peut aussi activer un mode d&#39;alimentation Windows, par exemple &#171;&#160;Performances &#233;lev&#233;es&#160;&#187; pour le jeu.</p>
+        <h3>Changer de profil</h3>
+        <ul>
+          <li>Sur l&#39;accueil, d&#39;un clic sur une tuile.</li>
+          <li>Avec l&#39;ic&#244;ne pr&#232;s de l&#39;horloge&#160;: clic droit, puis Profil des ventilateurs.</li>
+          <li>Avec Ctrl+Alt+P, qui passe au profil suivant.</li>
+          <li>Automatiquement, avec l&#39;Automatisme.</li>
+        </ul>
+      </section>
+      <section id="displays"><h2>Les &#233;crans</h2>
+        <p>VORTEX r&#232;gle les &#233;crans par le c&#226;ble vid&#233;o (DDC/CI), comme les boutons de l&#39;&#233;cran, mais d&#39;un clic.</p>
+        <ul>
+          <li>Luminosit&#233;, contraste et teinte (plus chaude le soir, plus froide le jour) pour chaque &#233;cran, et volume des &#233;crans &#233;quip&#233;s de haut-parleurs.</li>
+          <li>Un curseur commun r&#232;gle tous les &#233;crans &#224; la fois.</li>
+          <li>Les profils Bureau, Jeu, Film et Nuit changent luminosit&#233;, contraste et teinte en une fois&#160;; M&#201;MORISER LES R&#201;GLAGES ACTUELS DANS remplace un profil par votre r&#233;glage.</li>
+          <li>Choix de l&#39;entr&#233;e vid&#233;o et mise en veille, quand l&#39;&#233;cran le permet.</li>
+          <li>Cliquez sur le nom d&#39;un &#233;cran pour le renommer.</li>
+        </ul>
+        <h3>Personnaliser un &#233;cran</h3>
+        <ul>
+          <li>PLAGE DE LUMINOSIT&#201;&#160;: la luminosit&#233; de 0 &#224; 100 % parcourt cette plage. R&#233;glez-la pour que deux &#233;crans diff&#233;rents offrent le m&#234;me &#233;clairage au m&#234;me pourcentage (baissez le maximum de l&#39;&#233;cran le plus lumineux).</li>
+          <li>&#171;&#160;Masquer cet &#233;cran&#160;&#187;&#160;: il dispara&#238;t de la fen&#234;tre rapide et n&#39;est plus concern&#233; par les r&#233;glages group&#233;s (curseur commun, profils, raccourcis, plages horaires).</li>
+          <li>En mode expert, COMMANDE DDC/CI lit ou envoie n&#39;importe quel code &#224; l&#39;&#233;cran, pour les utilisateurs avertis.</li>
+        </ul>
+        <h3>La fen&#234;tre rapide</h3>
+        <p>Un clic sur l&#39;ic&#244;ne pr&#232;s de l&#39;horloge ouvre une petite fen&#234;tre&#160;: temp&#233;ratures, profils de ventilation, boost, luminosit&#233; de chaque &#233;cran et profils d&#39;affichage. La molette au-dessus de l&#39;ic&#244;ne r&#232;gle la luminosit&#233;. Le comportement du clic se choisit dans R&#233;glages → Affichage.</p>
+        <h3>&#201;cran &#171;&#160;non pris en charge&#160;&#187;&#160;?</h3>
+        <p>Activez l&#39;option DDC/CI dans le menu de l&#39;&#233;cran (&#224; l&#39;aide de ses boutons), puis cliquez sur ACTUALISER. L&#39;&#233;cran int&#233;gr&#233; d&#39;un ordinateur portable n&#39;utilise pas DDC/CI&#160;: VORTEX le r&#232;gle par Windows, sans configuration.</p>
+      </section>
+      <section id="monitoring"><h2>Surveillance&#160;: capteurs, historique, usure</h2>
+        <h3>Capteurs</h3>
+        <p>Toutes les temp&#233;ratures du PC, regroup&#233;es par composant&#160;: processeur, carte graphique, carte m&#232;re, disques, m&#233;moire. Pour chacune&#160;: la valeur actuelle, le minimum et le maximum depuis le lancement. Toutes peuvent servir de base &#224; une courbe.</p>
+        <h3>Sondes personnalis&#233;es</h3>
+        <p>+ NOUVELLE SONDE cr&#233;e une sonde calcul&#233;e par VORTEX&#160;: COMBINAISON (la plus chaude, la plus froide, la moyenne, la somme ou l&#39;&#233;cart de plusieurs sondes), D&#201;CALAGE (une sonde major&#233;e ou minor&#233;e de quelques degr&#233;s) ou FICHIER (un nombre lu dans un fichier texte mis &#224; jour par un autre programme). MOYENNE SUR lisse la valeur. La sonde se choisit ensuite dans la liste SUIT de n&#39;importe quelle carte de ventilateur.</p>
+        <h3>HWiNFO</h3>
+        <p>Si vous utilisez HWiNFO, activez IMPORTER LES SONDES DE HWINFO et cochez &#171;&#160;Shared Memory Support&#160;&#187; dans HWiNFO&#160;: toutes ses temp&#233;ratures deviennent utilisables dans VORTEX.</p>
+        <h3>Historique</h3>
+        <p>Les graphiques de temp&#233;ratures et de vitesses, de 15 minutes &#224; 1 mois. Survolez le graphique pour lire les valeurs.</p>
+        <p>Le test de refroidissement fait chauffer le processeur pendant 2 minutes et &#233;value le r&#233;sultat&#160;: il indique si le ventirad ou la p&#226;te thermique n&#233;cessitent un entretien.</p>
+        <h3>Usure</h3>
+        <p>&#192; consigne &#233;gale, un ventilateur qui tourne de moins en moins vite s&#39;use ou s&#39;encrasse. VORTEX compare ses premiers jours de mesure aux plus r&#233;cents et signale son &#233;tat&#160;: BON &#201;TAT, &#192; SURVEILLER ou USURE PROBABLE. Quelques jours de mesures sont n&#233;cessaires.</p>
+      </section>
+      <section id="automation"><h2>Automatisme</h2>
+        <p>VORTEX peut changer de r&#233;glage automatiquement.</p>
+        <ul>
+          <li>Profil selon l&#39;application&#160;: lorsqu&#39;un programme donn&#233; est en cours d&#39;ex&#233;cution (un jeu, un logiciel de rendu), tous les ventilateurs passent au profil choisi&#160;; &#224; sa fermeture, chacun retrouve son r&#233;glage. PROGRAMMES OUVERTS aide &#224; trouver le nom du programme.</li>
+          <li>Plages horaires&#160;: un profil et une luminosit&#233; pour une p&#233;riode, par exemple 22:00 → 07:00 pour la nuit, ou du coucher au lever du soleil (boutons COUCHER et LEVER, avec un d&#233;calage possible&#160;: &#171;&#160;coucher+30&#160;&#187;). Choisissez votre ville en bas de la carte&#160;: les heures du soleil sont calcul&#233;es sur votre PC, rien n&#39;est envoy&#233;. Une r&#232;gle par application est prioritaire sur les plages horaires.</li>
+          <li>Raccourcis clavier&#160;: Ctrl+Alt+↑/↓ luminosit&#233; (le niveau s&#39;affiche un instant &#224; l&#39;&#233;cran), Ctrl+Alt+P profil suivant, Ctrl+Alt+B boost 60 s, Ctrl+Alt+O panneau flottant, Ctrl+Alt+V ouvrir VORTEX.</li>
+          <li>Panneau flottant&#160;: un petit cadre toujours visible avec les temp&#233;ratures, m&#234;me en jeu.</li>
+          <li>Apr&#232;s une p&#233;riode sans clavier ni souris&#160;: &#233;crans en veille, ou luminosit&#233; baiss&#233;e. Tout est r&#233;tabli au premier mouvement.</li>
+        </ul>
+      </section>
+      <section id="safety"><h2>S&#233;curit&#233; et alertes</h2>
+        <p>VORTEX veille sur votre mat&#233;riel, m&#234;me en arri&#232;re-plan.</p>
+        <ul>
+          <li>S&#233;curit&#233; thermique&#160;: si le processeur ou la carte graphique d&#233;passe le seuil critique pendant 3 secondes, tous les ventilateurs pilot&#233;s passent &#224; 100 % jusqu&#39;au retour &#224; la normale.</li>
+          <li>Alertes&#160;: une notification pr&#232;s de l&#39;horloge quand un seuil d&#39;alerte est d&#233;pass&#233; ou qu&#39;un ventilateur semble bloqu&#233;. Elles informent sans rien modifier.</li>
+          <li>Disques&#160;: une alerte dans le Journal si un disque annonce une panne prochaine (SMART).</li>
+          <li>&#192; la fermeture de VORTEX, chaque ventilateur est rendu au BIOS&#160;: aucun r&#233;glage ne reste fig&#233;.</li>
+        </ul>
+        <p>Les seuils se r&#232;glent dans les R&#233;glages, cartes S&#233;curit&#233; thermique et Alertes.</p>
+      </section>
+      <section id="troubleshoot"><h2>D&#233;pannage</h2>
+        <h3>Le d&#233;pannage automatique</h3>
+        <p>Aide → D&#233;pannage, ou la ligne &#171;&#160;D&#233;pannage&#160;&#187; de l&#39;accueil, passe votre PC en revue en quelques secondes&#160;: droits, pilote, ventilateurs, sondes, temp&#233;ratures, logiciels concurrents, d&#233;marrage avec Windows, &#233;crans, &#233;clairage et mise &#224; jour. Pour chaque probl&#232;me, VORTEX explique ce qui se passe et pourquoi, puis propose un bouton qui le corrige ou qui m&#232;ne au bon endroit. Rien n&#39;est modifi&#233; sans votre accord. L&#39;accueil affiche en permanence le r&#233;sultat d&#39;une v&#233;rification discr&#232;te effectu&#233;e chaque minute.</p>
+        <h3>Aucun ventilateur n&#39;appara&#238;t</h3>
+        <ul>
+          <li>Installez le pilote PawnIO (bouton du d&#233;pannage), puis laissez VORTEX red&#233;marrer.</li>
+          <li>V&#233;rifiez que les ventilateurs sont branch&#233;s sur la carte m&#232;re, et non sur l&#39;alimentation ou un hub passif.</li>
+          <li>Une carte m&#232;re tr&#232;s r&#233;cente peut ne pas encore &#234;tre reconnue&#160;: signalez-la avec SIGNALER UN PROBL&#200;ME.</li>
+        </ul>
+        <h3>Un ventilateur ne change pas de vitesse</h3>
+        <ul>
+          <li>Dans le BIOS, r&#233;glez son connecteur en mode PWM (ventilateur &#224; 4 broches) ou DC (3 broches), et d&#233;sactivez &#171;&#160;Smart Fan&#160;&#187; s&#39;il impose sa courbe.</li>
+          <li>Un ventilateur &#224; 3 broches sur un connecteur r&#233;gl&#233; en PWM tourne souvent en permanence &#224; pleine vitesse&#160;: passez ce connecteur en DC.</li>
+          <li>Fermez les autres logiciels de ventilation (Armoury Crate, MSI Center, FanControl…) ou d&#233;sactivez leur contr&#244;le des ventilateurs.</li>
+        </ul>
+        <h3>La vitesse oscille sans arr&#234;t</h3>
+        <ul>
+          <li>Deux logiciels entrent en conflit&#160;: voir ci-dessus.</li>
+          <li>Sinon, choisissez la r&#233;activit&#233; LENTE sur la carte du ventilateur, ou augmentez l&#39;hyst&#233;r&#233;sis et le lissage en mode expert.</li>
+        </ul>
+        <h3>Le PC est trop bruyant</h3>
+        <ul>
+          <li>Choisissez le profil Silencieux, ou abaissez le haut de la courbe.</li>
+          <li>Pour un ventilateur qui s&#39;emballe au moindre pic&#160;: r&#233;activit&#233; LENTE, ou une sonde de temp&#233;rature &#224; la place de la charge.</li>
+        </ul>
+        <h3>Le PC chauffe trop</h3>
+        <ul>
+          <li>Profil Performance, puis TESTER LE REFROIDISSEMENT (accueil) pour mesurer le r&#233;sultat.</li>
+          <li>D&#233;poussi&#233;rez les filtres et les radiateurs&#160;; la p&#226;te thermique se remplace tous les 3 &#224; 5 ans.</li>
+          <li>Sens du flux d&#39;air&#160;: air frais entrant &#224; l&#39;avant et en bas, air chaud sortant &#224; l&#39;arri&#232;re et en haut.</li>
+        </ul>
+        <h3>La luminosit&#233; ne change pas</h3>
+        <ul>
+          <li>Activez DDC/CI dans le menu de l&#39;&#233;cran&#160;; &#233;vitez les adaptateurs et les stations d&#39;accueil.</li>
+          <li>L&#39;&#233;cran int&#233;gr&#233; d&#39;un portable est r&#233;gl&#233; par Windows&#160;: il fonctionne sans configuration.</li>
+        </ul>
+        <h3>Le probl&#232;me persiste&#160;?</h3>
+        <p>Aide → Journal → RAPPORT DE SANT&#201; cr&#233;e un fichier qui r&#233;sume la configuration de votre PC, sans aucune donn&#233;e personnelle. Joignez-le &#224; votre signalement&#160;: c&#39;est le moyen le plus rapide d&#39;en trouver la cause.</p>
+      </section>
+      <section id="updates"><h2>R&#233;glages, mises &#224; jour et aide</h2>
+        <h3>Mises &#224; jour</h3>
+        <p>R&#233;glages → RECHERCHER UNE MISE &#192; JOUR, ou le menu de l&#39;ic&#244;ne pr&#232;s de l&#39;horloge. Si une nouvelle version existe, INSTALLER LA MISE &#192; JOUR la t&#233;l&#233;charge, v&#233;rifie son empreinte et l&#39;installe&#160;; VORTEX red&#233;marre ensuite automatiquement. Avec l&#39;option d&#39;installation automatique, tout se fait sans intervention au d&#233;marrage.</p>
+        <h3>Sauvegarde</h3>
+        <p>EXPORTER enregistre tous vos r&#233;glages dans un fichier&#160;; IMPORTER les restaure, sur ce PC ou sur un autre.</p>
+        <h3>Besoin d&#39;aide&#160;?</h3>
+        <ul>
+          <li>Aide → D&#233;pannage v&#233;rifie votre PC et explique chaque probl&#232;me avec sa solution.</li>
+          <li>SIGNALER UN PROBL&#200;ME ouvre une page GitHub pr&#233;remplie&#160;: version, Windows, mod&#232;le des puces, aucune donn&#233;e personnelle.</li>
+          <li>Aide → Journal → RAPPORT DE BUG cr&#233;e un fichier .zip dans T&#233;l&#233;chargements, &#224; joindre au signalement.</li>
+        </ul>
+        <h3>Confidentialit&#233;</h3>
+        <p>Aucune donn&#233;e personnelle n&#39;est envoy&#233;e. Les rapports d&#39;erreur anonymes ne sont transmis que si vous les acceptez (R&#233;glages → Confidentialit&#233;).</p>
+        <h3>M&#233;moire</h3>
+        <p>R&#233;duit pr&#232;s de l&#39;horloge, VORTEX rend &#224; Windows la m&#233;moire dont il n&#39;a pas besoin et descend vers 50 Mo. R&#233;glages → D&#233;marrage affiche la m&#233;moire utilis&#233;e en ce moment et lors de la derni&#232;re r&#233;duction. D&#233;cochez &#171;&#160;Lib&#233;rer la m&#233;moire quand VORTEX est r&#233;duit&#160;&#187; pour une r&#233;ouverture un peu plus rapide.</p>
+        <h3>PC g&#233;r&#233; par un administrateur</h3>
+        <p>Dans une entreprise ou un &#233;tablissement scolaire, l&#39;administrateur peut fournir des r&#233;glages de d&#233;part communs et d&#233;sactiver les mises &#224; jour ou les rapports d&#39;erreur. Un bandeau en t&#234;te des R&#233;glages le signale.</p>
+      </section>
+      <section id="faq"><h2>Questions fr&#233;quentes</h2>
+        <h3>Quelque chose ne fonctionne pas</h3>
+        <p>Commencez par Aide → D&#233;pannage&#160;: VORTEX v&#233;rifie votre PC en quelques secondes et propose la solution, souvent avec un bouton de correction.</p>
+        <h3>Mes ventilateurs de bo&#238;tier ne r&#233;agissent pas</h3>
+        <p>Ils sont probablement branch&#233;s sur un hub passif livr&#233; avec le bo&#238;tier&#160;: seul le premier renvoie sa vitesse et aucun logiciel ne peut les r&#233;gler individuellement. Branchez-les sur un connecteur SYS_FAN de la carte m&#232;re, ou branchez-y le c&#226;ble PWM du hub. Le bouton SCANNER, en bas de la page Ventilateurs, recherche aussi les hubs USB connus.</p>
+        <h3>&#171;&#160;VORTEX s&#39;ex&#233;cute sans les droits d&#39;administrateur&#160;&#187;</h3>
+        <p>Les ventilateurs de la carte m&#232;re n&#233;cessitent les droits d&#39;administrateur et le pilote PawnIO. Lancez VORTEX normalement et acceptez la demande de Windows&#160;; R&#233;glages → Pilote mat&#233;riel installe le pilote s&#39;il manque.</p>
+        <h3>&#171;&#160;Windows a prot&#233;g&#233; votre ordinateur&#160;&#187;</h3>
+        <p>VORTEX n&#39;est pas encore sign&#233; par un certificat de signature de code (payant). Cliquez sur Informations compl&#233;mentaires, puis sur Ex&#233;cuter quand m&#234;me.</p>
+        <h3>Un ventilateur affiche &#171;&#160;BLOQU&#201;&#160;?&#160;&#187;</h3>
+        <p>Il ne renvoie plus de rotation alors que VORTEX le commande. V&#233;rifiez qu&#39;aucun c&#226;ble ne le g&#234;ne et qu&#39;il est bien branch&#233;. Un arr&#234;t volontaire (ARR&#202;T SOUS) s&#39;affiche &#171;&#160;ARR&#202;T VOLONTAIRE&#160;&#187;, jamais &#171;&#160;BLOQU&#201;&#160;?&#160;&#187;&#160;; s&#39;il ne repart pas apr&#232;s un arr&#234;t, augmentez sa vitesse minimale.</p>
+        <h3>Que se passe-t-il si je ferme VORTEX&#160;?</h3>
+        <p>Chaque ventilateur est rendu au BIOS, qui reprend sa r&#233;gulation habituelle.</p>
+      </section>
+    </main>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div>
+        <a class="brand" href="index.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#00e5ff" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M12,1.8 L20.8,6.9 L20.8,17.1 L12,22.2 L3.2,17.1 L3.2,6.9 Z M8,9 L12,15.6 L16,9"/></svg>
+          VORTEX CONTROL
+        </a>
+        <p>Chaque ventilateur, chaque écran, sous contrôle. Logiciel gratuit pour Windows 10 et 11, sans publicité et sans compte.</p>
+      </div>
+      <div>
+        <h4>Aide</h4>
+        <ul>
+          <li><a href="notice.html">Notice d'utilisation</a></li>
+          <li><a href="index.html#questions">Questions fréquentes</a></li>
+          <li><a href="https://github.com/Rafale-78/vortex-control/issues">Signaler un problème</a></li>
+          <li><a class="mail" data-u="vortex.support.contact" data-d="gmail.com">vortex.support.contact [arobase] gmail.com</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Informations</h4>
+        <ul>
+          <li><a href="https://github.com/Rafale-78/vortex-control/releases/latest">Toutes les versions</a></li>
+          <li><a href="mentions-legales.html">Mentions légales</a></li>
+          <li><a href="confidentialite.html">Confidentialité</a></li>
+          <li><a href="index.html#soutenir" data-soutien hidden>Soutenir VORTEX</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="legal">VORTEX Control, logiciel gratuit, code fermé. Ce site n'utilise aucun cookie ni aucune mesure d'audience.</div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  // Adresse assemblée dans le navigateur : les robots qui ramassent les adresses dans le code de la page ne la voient pas.
+  document.querySelectorAll("a.mail").forEach(function (a) {
+    var address = a.dataset.u + "@" + a.dataset.d;
+    a.href = "mailto:" + address;
+    a.textContent = address;
+  });
+
+  var top = document.getElementById("top");
+  function onScroll() { top.classList.toggle("scrolled", window.scrollY > 8); }
+  window.addEventListener("scroll", onScroll, { passive: true });
+  onScroll();
+
+  var burger = document.querySelector(".burger"), menu = document.getElementById("menu");
+  function setMenu(open) {
+    menu.classList.toggle("open", open);
+    burger.setAttribute("aria-expanded", String(open));
+    burger.setAttribute("aria-label", open ? "Fermer le menu" : "Ouvrir le menu");
+  }
+  burger.addEventListener("click", function () { setMenu(!menu.classList.contains("open")); });
+  menu.addEventListener("click", function (e) { if (e.target.closest("a")) setMenu(false); });
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape") setMenu(false); });
+
+  // Sommaire : le chapitre en cours de lecture est mis en évidence (et ramené en vue sur téléphone).
+  var toc = document.querySelector(".toc"), links = {};
+  toc.querySelectorAll("a").forEach(function (a) { links[a.hash.slice(1)] = a; });
+  var first = toc.querySelector("a");
+  if (first && !location.hash) first.classList.add("on");
+  if ("IntersectionObserver" in window) {
+    var spy = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting || !links[entry.target.id]) return;
+        toc.querySelectorAll("a.on").forEach(function (a) { a.classList.remove("on"); a.removeAttribute("aria-current"); });
+        var link = links[entry.target.id];
+        link.classList.add("on");
+        link.setAttribute("aria-current", "location");
+        if (toc.scrollWidth > toc.clientWidth) toc.scrollTo({ left: link.offsetLeft - 20, behavior: "smooth" });
+      });
+    }, { rootMargin: "-150px 0px -60% 0px" });
+    document.querySelectorAll("main section[id]").forEach(function (s) { spy.observe(s); });
+  }
+})();
+</script>
+</body>
+</html>

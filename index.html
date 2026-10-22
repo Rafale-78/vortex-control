@@ -1,0 +1,667 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VORTEX Control — ventilateurs et écrans sous Windows, gratuit</title>
+<meta name="description" content="Logiciel gratuit pour Windows 10 et 11 : un PC silencieux au repos et frais en charge. Courbes de ventilation, sept modes, luminosité des écrans, dépannage automatique. Sans publicité, sans compte.">
+<meta name="theme-color" content="#05080f">
+<meta name="color-scheme" content="dark">
+<link rel="canonical" href="https://rafale-78.github.io/vortex-control/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2300e5ff' stroke-width='1.6' stroke-linejoin='round'%3E%3Cpath d='M12,1.8 L20.8,6.9 L20.8,17.1 L12,22.2 L3.2,17.1 L3.2,6.9 Z M8,9 L12,15.6 L16,9'/%3E%3C/svg%3E">
+<link rel="preload" as="image" href="images/accueil.webp" type="image/webp" fetchpriority="high">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="VORTEX Control">
+<meta property="og:title" content="VORTEX Control — chaque ventilateur, chaque écran, sous contrôle">
+<meta property="og:description" content="Logiciel gratuit pour Windows 10/11 : un PC silencieux au repos et frais en charge. Sept modes de ventilation, luminosité des écrans, dépannage automatique. Sans publicité, sans compte.">
+<meta property="og:url" content="https://rafale-78.github.io/vortex-control/">
+<meta property="og:image" content="https://rafale-78.github.io/vortex-control/images/accueil.png">
+<meta property="og:image:width" content="1280">
+<meta property="og:image:height" content="820">
+<meta property="og:locale" content="fr_FR">
+<meta name="twitter:card" content="summary_large_image">
+<script>document.documentElement.classList.add("js");</script>
+<style>
+  :root {
+    --bg: #05080f; --bg-2: #0a1120; --card: rgba(13, 22, 40, .78); --card-hi: rgba(17, 29, 52, .9);
+    --line: rgba(122, 162, 222, .15); --line-hi: rgba(0, 229, 255, .38);
+    --cyan: #00e5ff; --blue: #4f8bff; --magenta: #ff2bd6; --violet: #7b5cff; --amber: #ffb224; --green: #2bffa3;
+    --text: #e8f0ff; --dim: #a6b5d1; --mute: #7b8cab;
+    --font: "Segoe UI Variable Text", "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+    --display: "Segoe UI Variable Display", "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+    --tech: Bahnschrift, "Segoe UI", system-ui, sans-serif;
+    --radius: 16px; --ease: cubic-bezier(.2, .7, .2, 1);
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; scroll-padding-top: 84px; -webkit-text-size-adjust: 100%; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.6 var(--font); overflow-x: hidden; }
+  body::before {
+    content: ""; position: fixed; inset: -20vmax; z-index: -2; pointer-events: none;
+    background:
+      radial-gradient(38vmax 30vmax at 78% 12%, rgba(123, 92, 255, .20), transparent 70%),
+      radial-gradient(34vmax 28vmax at 12% 8%, rgba(0, 229, 255, .14), transparent 70%),
+      radial-gradient(30vmax 26vmax at 60% 92%, rgba(255, 43, 214, .08), transparent 70%);
+    animation: drift 28s ease-in-out infinite alternate;
+  }
+  body::after {
+    content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+    background: linear-gradient(rgba(0, 229, 255, .045) 1px, transparent 1px) 0 0 / 44px 44px,
+                linear-gradient(90deg, rgba(0, 229, 255, .045) 1px, transparent 1px) 0 0 / 44px 44px;
+    -webkit-mask-image: radial-gradient(ellipse 90% 60% at 50% 0%, #000 30%, transparent 85%);
+            mask-image: radial-gradient(ellipse 90% 60% at 50% 0%, #000 30%, transparent 85%);
+  }
+  @keyframes drift { to { transform: translate3d(4vmax, 3vmax, 0) rotate(8deg); } }
+  a { color: var(--cyan); text-underline-offset: 3px; }
+  img { max-width: 100%; height: auto; display: block; }
+  code { font-family: "Cascadia Mono", Consolas, monospace; font-size: .88em; color: var(--cyan); background: rgba(0, 229, 255, .07); border-radius: 5px; padding: 1px 4px; overflow-wrap: anywhere; }
+  .wrap { width: min(1180px, 100% - 40px); margin-inline: auto; }
+  .ic { width: 22px; height: 22px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+  .skip { position: absolute; left: 12px; top: -60px; z-index: 100; background: var(--cyan); color: #021016; padding: 10px 16px; border-radius: 8px; font-weight: 700; }
+  .skip:focus { top: 12px; }
+  :focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; border-radius: 6px; }
+
+  /* En-tête */
+  .top { position: sticky; top: 0; z-index: 50; transition: background .3s, border-color .3s, box-shadow .3s; border-bottom: 1px solid transparent; }
+  .top.scrolled { background: rgba(5, 8, 15, .78); -webkit-backdrop-filter: blur(14px) saturate(140%); backdrop-filter: blur(14px) saturate(140%); border-bottom-color: var(--line); box-shadow: 0 10px 30px rgba(0, 0, 0, .25); }
+  .top .wrap { display: flex; align-items: center; gap: 20px; height: 68px; }
+  .brand { display: flex; align-items: center; gap: 11px; color: var(--text); text-decoration: none; font: 700 15px/1 var(--tech); letter-spacing: .14em; margin-right: auto; }
+  .brand svg { width: 30px; height: 30px; filter: drop-shadow(0 0 8px rgba(0, 229, 255, .5)); }
+  .menu { display: flex; align-items: center; gap: 4px; }
+  .menu a:not(.btn) { color: var(--dim); text-decoration: none; font-size: 14.5px; padding: 8px 12px; border-radius: 8px; transition: color .2s, background .2s; }
+  .menu a:not(.btn):hover { color: var(--text); background: rgba(255, 255, 255, .05); }
+  .menu .btn { margin-left: 10px; }
+  .burger { display: none; background: none; border: 1px solid var(--line); color: var(--text); width: 42px; height: 42px; border-radius: 10px; cursor: pointer; place-items: center; }
+
+  /* Boutons */
+  .btn { position: relative; display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 15px 26px; border-radius: 12px; font: 650 16px/1.1 var(--font); text-decoration: none; letter-spacing: .01em; transition: transform .25s var(--ease), box-shadow .25s, border-color .25s, background .25s; overflow: hidden; isolation: isolate; }
+  .btn-main { color: #021016; background: linear-gradient(100deg, var(--cyan), #57b6ff 55%, #8f8bff); box-shadow: 0 8px 30px rgba(0, 229, 255, .35), inset 0 1px 0 rgba(255, 255, 255, .45); }
+  .btn-main::after { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, .55) 50%, transparent 70%); transform: translateX(-120%); transition: transform .7s var(--ease); }
+  .btn-main:hover { transform: translateY(-2px); box-shadow: 0 14px 40px rgba(0, 229, 255, .5), inset 0 1px 0 rgba(255, 255, 255, .45); }
+  .btn-main:hover::after { transform: translateX(120%); }
+  .btn-ghost { color: var(--text); border: 1px solid var(--line-hi); background: rgba(0, 229, 255, .04); }
+  .btn-ghost:hover { border-color: var(--cyan); background: rgba(0, 229, 255, .09); transform: translateY(-2px); }
+  .btn-sm { padding: 10px 16px; font-size: 14px; border-radius: 10px; }
+  .btn-lg { padding: 18px 32px; font-size: 17.5px; }
+
+  /* Haut de page */
+  .hero { display: grid; grid-template-columns: minmax(0, 1.04fr) minmax(0, 1fr); gap: 48px; align-items: center; padding: 56px 0 64px; }
+  .pill { display: inline-flex; align-items: center; gap: 10px; padding: 6px 14px 6px 8px; border: 1px solid var(--line-hi); border-radius: 999px; background: rgba(0, 229, 255, .06); color: var(--dim); font-size: 13.5px; text-decoration: none; }
+  .pill b { color: #021016; background: var(--cyan); border-radius: 999px; padding: 2px 9px; font: 700 11px/1.5 var(--tech); letter-spacing: .1em; }
+  .pill:hover { color: var(--text); border-color: var(--cyan); }
+  h1 { font: 700 clamp(2.3rem, 3.6vw, 3.35rem)/1.06 var(--display); letter-spacing: -.03em; margin: 22px 0 20px; }  .grad { background: linear-gradient(95deg, var(--cyan) 0%, #7fa8ff 45%, var(--magenta) 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .lead { color: var(--dim); font-size: clamp(1.05rem, 1.4vw, 1.2rem); max-width: 33em; margin: 0; }
+  .cta { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 30px; align-items: center; }
+  .dl-meta { color: var(--mute); font-size: 13.5px; margin-top: 14px; }
+  .dl-meta a { color: var(--dim); }
+  .trust { display: flex; flex-wrap: wrap; gap: 8px 18px; list-style: none; padding: 0; margin: 26px 0 0; color: var(--dim); font-size: 14.5px; }
+  .trust li { display: inline-flex; align-items: center; gap: 7px; }
+  .trust .ic { width: 18px; height: 18px; color: var(--green); stroke-width: 2.2; }
+
+  .stage { position: relative; perspective: 1800px; }
+  .stage::before { content: ""; position: absolute; inset: 8% 4% -2% 10%; background: radial-gradient(closest-side, rgba(0, 229, 255, .35), rgba(123, 92, 255, .18) 55%, transparent); filter: blur(40px); z-index: -1; }
+  .window { border-radius: 14px; overflow: hidden; border: 1px solid rgba(120, 180, 255, .22); background: #070c17; box-shadow: 0 40px 90px rgba(0, 0, 0, .65), 0 0 0 1px rgba(0, 229, 255, .06); }
+  .stage .main { width: 112%; transform: rotateY(-8deg) rotateX(3deg) rotateZ(.4deg); transform-origin: 40% 50%; transition: transform .9s var(--ease); }
+  .stage:hover .main { transform: rotateY(-4deg) rotateX(2deg); }
+  .stage .float { position: absolute; width: 36%; left: -9%; bottom: -12%; border-color: rgba(0, 229, 255, .45); box-shadow: 0 30px 70px rgba(0, 0, 0, .7), 0 0 40px rgba(0, 229, 255, .18); animation: bob 7s ease-in-out infinite; }
+  .stage .label { position: absolute; left: -9%; bottom: calc(-12% - 34px); display: inline-flex; gap: 8px; align-items: center; font-size: 13px; color: var(--dim); white-space: nowrap; }
+  .stage .label .ic { width: 16px; height: 16px; color: var(--cyan); }
+  @keyframes bob { 50% { transform: translateY(-10px); } }
+
+  /* Chiffres */
+  .facts { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1px; margin: 24px 0 0; background: var(--line); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+  .fact { background: rgba(8, 13, 25, .92); padding: 22px 18px; text-align: center; }
+  .fact strong { display: block; font: 700 clamp(1.7rem, 2.8vw, 2.3rem)/1.1 var(--display); letter-spacing: -.02em; }
+  .fact span { display: block; color: var(--dim); font-size: 14px; line-height: 1.4; margin-top: 6px; }
+
+  /* Sections */
+  section { padding: 96px 0 0; }
+  .head { max-width: 760px; margin: 0 0 40px; }
+  .head.center { margin-inline: auto; text-align: center; }
+  .kicker { display: inline-block; font: 700 12.5px/1 var(--tech); letter-spacing: .22em; color: var(--cyan); text-transform: uppercase; margin-bottom: 14px; }
+  h2 { font: 700 clamp(1.9rem, 3.6vw, 2.9rem)/1.1 var(--display); letter-spacing: -.025em; margin: 0 0 14px; }
+  .head p { color: var(--dim); font-size: 1.08rem; margin: 0; }
+
+  /* 4 en 1 */
+  .four { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .tile { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; transition: transform .35s var(--ease), border-color .35s, background .35s; }
+  .tile:hover { transform: translateY(-4px); border-color: var(--line-hi); background: var(--card-hi); }
+  .tile .badge { width: 46px; height: 46px; border-radius: 12px; display: grid; place-items: center; color: var(--cyan); background: linear-gradient(140deg, rgba(0, 229, 255, .18), rgba(123, 92, 255, .14)); border: 1px solid rgba(0, 229, 255, .3); margin-bottom: 16px; }
+  .tile .badge .ic { width: 24px; height: 24px; }
+  .tile:hover .spin { animation: spin 1.2s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .tile h3 { font: 650 18px/1.3 var(--display); margin: 0 0 6px; }
+  .tile p { color: var(--dim); font-size: 15px; margin: 0; }
+
+  /* Fonctions illustrées */
+  .row { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: 60px; align-items: center; padding: 44px 0; }
+  .row + .row { border-top: 1px solid var(--line); }
+  .row.flip .txt { order: 2; }
+  .row h3 { font: 700 clamp(1.5rem, 2.6vw, 2.05rem)/1.15 var(--display); letter-spacing: -.02em; margin: 0 0 14px; }
+  .row p { color: var(--dim); margin: 0 0 18px; font-size: 1.04rem; }
+  .ticks { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+  .ticks li { display: flex; gap: 10px; align-items: flex-start; }
+  .ticks .ic { width: 20px; height: 20px; margin-top: 2px; color: var(--cyan); stroke-width: 2.2; }
+  .shot { display: block; position: relative; border-radius: 14px; overflow: hidden; border: 1px solid rgba(120, 180, 255, .2); box-shadow: 0 30px 70px rgba(0, 0, 0, .55); transition: transform .5s var(--ease), box-shadow .5s, border-color .5s; cursor: zoom-in; }
+  .shot:hover { transform: translateY(-4px) scale(1.01); border-color: var(--line-hi); box-shadow: 0 40px 90px rgba(0, 0, 0, .6), 0 0 50px rgba(0, 229, 255, .12); }
+
+  /* Et aussi */
+  .bento { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .bento .tile { padding: 22px; }
+  .bento .tile .badge { width: 40px; height: 40px; border-radius: 10px; margin-bottom: 14px; }
+  .bento .tile .badge .ic { width: 21px; height: 21px; }
+  .bento .tile h3 { font-size: 16.5px; }
+  .bento .tile p { font-size: 14.5px; }
+
+  /* Confidentialité */
+  .privacy { display: grid; grid-template-columns: minmax(0, .95fr) minmax(0, 1.05fr); gap: 48px; align-items: center; padding: 48px; border-radius: 24px; border: 1px solid rgba(43, 255, 163, .22); background: radial-gradient(600px 300px at 0% 0%, rgba(43, 255, 163, .10), transparent 70%), linear-gradient(180deg, rgba(13, 22, 40, .9), rgba(8, 13, 25, .9)); }
+  .privacy .kicker { color: var(--green); }
+  .privacy .head { margin: 0; }
+  .privacy ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 14px; }
+  .privacy li { display: flex; gap: 14px; align-items: flex-start; background: rgba(5, 8, 15, .5); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; color: var(--dim); }
+  .privacy li b { color: var(--text); font-weight: 650; }
+  .privacy li .ic { color: var(--green); margin-top: 1px; }
+  .privacy code { white-space: nowrap; overflow-wrap: normal; }
+
+  /* Galerie */
+  .strip-wrap { position: relative; }
+  .strip { display: grid; grid-auto-flow: column; grid-auto-columns: min(82%, 560px); gap: 20px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: 2px; padding: 4px 2px 18px; scrollbar-width: thin; scrollbar-color: var(--line-hi) transparent; overscroll-behavior-x: contain; }
+  .strip figure { margin: 0; scroll-snap-align: start; }
+  .strip figure.narrow .shot { width: auto; max-width: 100%; margin: 0 auto; background: #070c17; display: flex; justify-content: center; }
+  .strip figure.narrow .shot img { width: auto; max-height: 358px; }
+  .strip figcaption { color: var(--dim); font-size: 14.5px; margin-top: 12px; }
+  .strip-nav { display: flex; gap: 10px; justify-content: flex-end; margin: -12px 0 18px; }
+  .strip-nav button { width: 44px; height: 44px; border-radius: 12px; border: 1px solid var(--line-hi); background: rgba(0, 229, 255, .05); color: var(--text); cursor: pointer; display: grid; place-items: center; transition: background .2s, border-color .2s; }
+  .strip-nav button:hover { background: rgba(0, 229, 255, .12); border-color: var(--cyan); }
+  .small-note { color: var(--mute); font-size: 13.5px; margin: 6px 0 0; }
+
+  /* Installer */
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; counter-reset: step; }
+  .step { position: relative; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 26px 24px 24px; }
+  .step::before { counter-increment: step; content: counter(step); position: absolute; top: -16px; left: 22px; width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; font: 700 15px/1 var(--tech); color: #021016; background: linear-gradient(140deg, var(--cyan), #8f8bff); box-shadow: 0 6px 20px rgba(0, 229, 255, .35); }
+  .step h3 { font: 650 17.5px/1.3 var(--display); margin: 6px 0 8px; }
+  .step p { color: var(--dim); margin: 0; font-size: 15px; }
+  .note { margin-top: 22px; border: 1px solid rgba(255, 178, 36, .35); background: rgba(255, 178, 36, .06); padding: 16px 20px; border-radius: 12px; color: var(--dim); }
+  .note b { color: var(--amber); }
+
+  /* Questions */
+  .faq { max-width: 880px; margin-inline: auto; display: grid; gap: 12px; }
+  .faq details { background: var(--card); border: 1px solid var(--line); border-radius: 14px; transition: border-color .25s, background .25s; }
+  .faq details[open] { border-color: var(--line-hi); background: var(--card-hi); }
+  .faq summary { list-style: none; cursor: pointer; display: flex; justify-content: space-between; gap: 16px; align-items: center; padding: 18px 22px; font-weight: 600; font-size: 16.5px; }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq summary::after { content: ""; flex: none; width: 10px; height: 10px; border-right: 2px solid var(--cyan); border-bottom: 2px solid var(--cyan); transform: rotate(45deg) translateY(-3px); transition: transform .3s var(--ease); }
+  .faq details[open] summary::after { transform: rotate(225deg) translateY(-2px); }
+  .faq details p { color: var(--dim); margin: 0; padding: 0 22px 20px; }
+
+  /* Soutenir et fin */
+  #soutenir .box, .final { text-align: center; border-radius: 24px; padding: 56px 28px; border: 1px solid var(--line-hi); background: radial-gradient(700px 320px at 50% 0%, rgba(0, 229, 255, .16), transparent 70%), radial-gradient(500px 260px at 50% 100%, rgba(255, 43, 214, .10), transparent 70%), rgba(8, 13, 25, .85); }
+  #soutenir p, .final p { color: var(--dim); max-width: 36em; margin: 0 auto 26px; font-size: 1.08rem; }
+  .final h2 { font-size: clamp(2rem, 4.2vw, 3.2rem); }
+  .final .cta { justify-content: center; }
+
+  footer { margin-top: 96px; border-top: 1px solid var(--line); padding: 44px 0 56px; color: var(--mute); font-size: 14px; }
+  .foot { display: grid; grid-template-columns: 1.3fr 1fr 1fr; gap: 32px; margin-bottom: 30px; }
+  .foot h4 { color: var(--text); font: 650 14px/1 var(--display); margin: 4px 0 14px; letter-spacing: .02em; }
+  .foot ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
+  .foot a { color: var(--dim); text-decoration: none; }
+  .foot a:hover { color: var(--cyan); }
+  .foot p { margin: 12px 0 0; max-width: 30em; }
+  .legal { border-top: 1px solid var(--line); padding-top: 22px; font-size: 13px; line-height: 1.7; }
+  .legal a { color: var(--dim); }
+
+  /* Agrandissement */
+  dialog.zoom { padding: 0; border: 1px solid var(--line-hi); border-radius: 14px; background: #070c17; max-width: min(1280px, 94vw); max-height: 92vh; overflow: auto; box-shadow: 0 40px 120px rgba(0, 0, 0, .8); }
+  dialog.zoom::backdrop { background: rgba(2, 4, 9, .82); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+  dialog.zoom img { width: 100%; height: auto; }
+  dialog.zoom button { position: absolute; top: 10px; right: 10px; width: 40px; height: 40px; border-radius: 10px; border: 1px solid var(--line-hi); background: rgba(5, 8, 15, .85); color: var(--text); font-size: 22px; line-height: 1; cursor: pointer; }
+
+  /* Apparition au défilement (seulement si le script tourne) */
+  .js .rv { opacity: 0; transform: translateY(22px); transition: opacity .8s var(--ease), transform .8s var(--ease); }
+  .js .rv.in { opacity: 1; transform: none; }
+  .js .rv.d1 { transition-delay: .08s; } .js .rv.d2 { transition-delay: .16s; } .js .rv.d3 { transition-delay: .24s; }
+  /* Le haut de page apparaît dès le chargement, sans attendre le défilement. */
+  .js .hero .rv { opacity: 1; transform: none; transition: none; animation: rise .9s var(--ease) both; }
+  .js .hero .rv.d1 { animation-delay: .08s; } .js .hero .rv.d2 { animation-delay: .16s; } .js .hero .rv.d3 { animation-delay: .24s; }
+  @keyframes rise { from { opacity: 0; transform: translateY(22px); } }
+
+  [hidden] { display: none !important; }
+
+  @media (max-width: 1260px) { .stage .main { width: 100%; } }
+  @media (max-width: 1040px) {
+    .hero { grid-template-columns: 1fr; gap: 70px; padding-top: 36px; }
+    .stage { max-width: 720px; margin-inline: auto 0; padding-left: 8%; }
+    .stage .float { left: -2%; }
+    .stage .label { left: -2%; }
+    .facts { grid-template-columns: repeat(3, 1fr); }
+    .four, .bento { grid-template-columns: repeat(2, 1fr); }
+    .row, .row.flip { grid-template-columns: 1fr; gap: 28px; }
+    .row.flip .txt { order: 0; }
+    .privacy { grid-template-columns: 1fr; padding: 34px 26px; }
+  }
+  @media (max-width: 860px) {
+    .burger { display: grid; }
+    .menu { position: absolute; top: 68px; left: 0; right: 0; flex-direction: column; align-items: stretch; gap: 2px; padding: 12px 20px 20px; background: rgba(5, 8, 15, .96); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); border-bottom: 1px solid var(--line); transform: translateY(-8px); opacity: 0; visibility: hidden; transition: opacity .25s, transform .25s, visibility .25s; }
+    .menu.open { transform: none; opacity: 1; visibility: visible; }
+    .menu a:not(.btn) { padding: 12px 10px; font-size: 16px; }
+    .menu .btn { margin: 8px 0 0; }
+    .steps { grid-template-columns: 1fr; gap: 26px; }
+    .foot { grid-template-columns: 1fr 1fr; }
+    .foot > div:first-child { grid-column: 1 / -1; }
+  }
+  @media (max-width: 560px) {
+    .wrap { width: calc(100% - 32px); }
+    .stage .main { transform: none; }
+    .stage { padding-left: 0; }
+    .hero { padding-bottom: 96px; }
+    .stage .float { width: 42%; left: auto; right: -4px; bottom: -16%; }
+    .stage .label { left: 0; bottom: -46px; max-width: 54%; white-space: normal; align-items: flex-start; }
+    .facts { grid-template-columns: repeat(2, 1fr); }
+    .facts .fact:last-child { grid-column: 1 / -1; }
+    .four, .bento { grid-template-columns: 1fr; }
+    .btn { width: 100%; }
+    .menu .btn, .strip-nav button { width: auto; }
+    section { padding-top: 76px; }
+    .privacy { padding: 26px 18px; }
+    .foot { grid-template-columns: 1fr; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    .js .rv { opacity: 1; transform: none; }
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#contenu">Aller au contenu</a>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-fan" viewBox="0 0 24 24"><circle cx="12" cy="12" r="1.6"/><path d="M12 10.4C11.2 6.6 12.8 3.2 15.6 3.3c2.8.1 2.8 4.1-2 7.3"/><path d="M12 10.4C11.2 6.6 12.8 3.2 15.6 3.3c2.8.1 2.8 4.1-2 7.3" transform="rotate(120 12 12)"/><path d="M12 10.4C11.2 6.6 12.8 3.2 15.6 3.3c2.8.1 2.8 4.1-2 7.3" transform="rotate(240 12 12)"/></symbol>
+  <symbol id="i-screen" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></symbol>
+  <symbol id="i-temp" viewBox="0 0 24 24"><path d="M10 14.6V5a2 2 0 0 1 4 0v9.6a4 4 0 1 1-4 0z"/><path d="M12 9v7.5"/></symbol>
+  <symbol id="i-aid" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.8"/><path d="M5.6 5.6l3.7 3.7M14.7 14.7l3.7 3.7M18.4 5.6l-3.7 3.7M9.3 14.7l-3.7 3.7"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+  <symbol id="i-down" viewBox="0 0 24 24"><path d="M12 3.5v11.5M7 10.5l5 5 5-5M5 20.5h14"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 4.6-3.4 8-8 9-4.6-1-8-4.4-8-9V6z"/><path d="M8.6 12.2l2.4 2.4 4.4-4.8"/></symbol>
+  <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 2.5L4.5 13.5H11l-1 8 8.5-11H12z"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/></symbol>
+  <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1"/><circle cx="15" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="18" r="2"/></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24"><path d="M5 4.5A1.5 1.5 0 0 1 6.5 3H19v15H6.5A1.5 1.5 0 0 0 5 19.5z"/><path d="M5 19.5A1.5 1.5 0 0 0 6.5 21H19M9 7.5h6"/></symbol>
+  <symbol id="i-update" viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.4-5.7"/><path d="M20 4v5h-5"/></symbol>
+  <symbol id="i-building" viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="1.5"/><path d="M9 7h.01M15 7h.01M9 11h.01M15 11h.01M9 15h.01M15 15h.01M10.5 21v-3h3v3"/></symbol>
+  <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3.4 3 14.6 0 18M12 3c-3 3.4-3 14.6 0 18"/></symbol>
+  <symbol id="i-pulse" viewBox="0 0 24 24"><path d="M3 12h4l2.2-5 4.2 10 2.2-5H21"/></symbol>
+  <symbol id="i-window" viewBox="0 0 24 24"><rect x="3" y="3.5" width="13" height="12" rx="2"/><path d="M8 20.5h10.5a2 2 0 0 0 2-2V9"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4.5" y="10.5" width="15" height="10" rx="2"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></symbol>
+  <symbol id="i-user-off" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.6"/><path d="M5 20c.8-3.4 3.6-5.4 7-5.4s6.2 2 7 5.4M4 4l16 16"/></symbol>
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M4 11l8-6.5 8 6.5"/><path d="M6 9.5V20h12V9.5"/></symbol>
+  <symbol id="i-eye-off" viewBox="0 0 24 24"><path d="M3 12s3.4-6 9-6c1.6 0 3 .4 4.2 1M21 12s-3.4 6-9 6c-1.6 0-3-.4-4.2-1"/><path d="M4 4l16 16"/></symbol>
+  <symbol id="i-left" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></symbol>
+  <symbol id="i-right" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+  <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20s-7.5-4.6-7.5-10.2A4.2 4.2 0 0 1 12 7.3a4.2 4.2 0 0 1 7.5 2.5C19.5 15.4 12 20 12 20z"/></symbol>
+</svg>
+
+<header class="top" id="top">
+  <div class="wrap">
+    <a class="brand" href="#contenu" aria-label="VORTEX Control, haut de la page">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#00e5ff" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M12,1.8 L20.8,6.9 L20.8,17.1 L12,22.2 L3.2,17.1 L3.2,6.9 Z M8,9 L12,15.6 L16,9"/></svg>
+      VORTEX CONTROL
+    </a>
+    <button class="burger" type="button" aria-expanded="false" aria-controls="menu" aria-label="Ouvrir le menu"><svg class="ic"><use href="#i-menu"/></svg></button>
+    <nav class="menu" id="menu" aria-label="Menu principal">
+      <a href="#fonctions">Fonctions</a>
+      <a href="#captures">Captures</a>
+      <a href="#installer">Installer</a>
+      <a href="#questions">Questions</a>
+      <a href="notice.html">Notice</a>
+      <a href="#soutenir" data-soutien hidden>Soutenir</a>
+      <a class="btn btn-main btn-sm" href="https://github.com/Rafale-78/vortex-control/releases/download/v2.0.1/VORTEX-Control-Setup-2.0.1.exe"><svg class="ic"><use href="#i-down"/></svg>Télécharger</a>
+    </nav>
+  </div>
+</header>
+
+<main id="contenu">
+  <div class="wrap">
+    <div class="hero">
+      <div>
+        <a class="pill rv" href="#fonctions"><b>NOUVEAU</b>Version 2.0 : fenêtre rapide, sept modes, sondes sur mesure</a>
+        <h1 class="rv d1">Silencieux au repos.<br><span class="grad">Frais quand ça chauffe.</span></h1>
+        <p class="lead rv d2">VORTEX règle chaque ventilateur de votre PC selon la température réelle, ainsi que la luminosité de vos écrans, depuis un seul logiciel. Gratuit, sans publicité, sans compte.</p>
+        <div class="cta rv d3">
+          <a class="btn btn-main btn-lg" href="https://github.com/Rafale-78/vortex-control/releases/download/v2.0.1/VORTEX-Control-Setup-2.0.1.exe"><svg class="ic"><use href="#i-down"/></svg>Télécharger gratuitement</a>
+          <a class="btn btn-ghost btn-lg" href="#fonctions">Découvrir</a>
+        </div>
+        <p class="dl-meta rv d3">Version <span data-version>2.0.1</span> · Windows 10 et 11, 64 bits · <span data-size>68 Mo</span> · <a href="https://github.com/Rafale-78/vortex-control/releases/latest">toutes les versions</a></p>
+        <ul class="trust rv d3">
+          <li><svg class="ic"><use href="#i-check"/></svg>100 % gratuit</li>
+          <li><svg class="ic"><use href="#i-check"/></svg>Sans publicité</li>
+          <li><svg class="ic"><use href="#i-check"/></svg>Sans compte</li>
+          <li><svg class="ic"><use href="#i-check"/></svg>Pilote inclus</li>
+        </ul>
+      </div>
+      <div class="stage rv d2">
+        <a class="window main shot" href="images/accueil.png" data-zoom="images/accueil.webp">
+          <picture><source srcset="images/accueil.webp" type="image/webp"><img src="images/accueil.png" width="1280" height="820" alt="Accueil de VORTEX : état du PC, score de fraîcheur, raccourcis et profils des ventilateurs" fetchpriority="high" decoding="async"></picture>
+        </a>
+        <a class="window float shot" href="images/fenetre-rapide.png" data-zoom="images/fenetre-rapide.webp">
+          <picture><source srcset="images/fenetre-rapide.webp" type="image/webp"><img src="images/fenetre-rapide.png" width="340" height="393" alt="Fenêtre rapide près de l'horloge : températures, profils, boost et luminosité de chaque écran" decoding="async"></picture>
+        </a>
+        <span class="label" aria-hidden="true"><svg class="ic"><use href="#i-window"/></svg>La fenêtre rapide, d'un clic près de l'horloge</span>
+      </div>
+    </div>
+
+    <div class="facts rv">
+      <div class="fact"><strong class="grad">4 en 1</strong><span>ventilation, écrans, capteurs, dépannage</span></div>
+      <div class="fact"><strong class="grad">7</strong><span>modes de ventilation</span></div>
+      <div class="fact"><strong class="grad">≈ 50 Mo</strong><span>en arrière-plan</span></div>
+      <div class="fact"><strong class="grad">5</strong><span>langues</span></div>
+      <div class="fact"><strong class="grad">0</strong><span>publicité, compte ou abonnement</span></div>
+    </div>
+
+    <section id="fonctions">
+      <div class="head center rv">
+        <span class="kicker">Un seul logiciel au lieu de quatre</span>
+        <h2>Tout votre PC, d'un seul coup d'œil</h2>
+        <p>VORTEX peut remplacer les utilitaires de la carte mère, de la carte graphique et des écrans. Il travaille discrètement près de l'horloge.</p>
+      </div>
+      <div class="four">
+        <div class="tile rv"><div class="badge"><svg class="ic spin"><use href="#i-fan"/></svg></div><h3>Ventilation</h3><p>Chaque ventilateur de la carte mère et de la carte graphique suit la bonne température.</p></div>
+        <div class="tile rv d1"><div class="badge"><svg class="ic"><use href="#i-screen"/></svg></div><h3>Écrans</h3><p>Luminosité, contraste et teinte de tous vos écrans, sans toucher à leurs boutons.</p></div>
+        <div class="tile rv d2"><div class="badge"><svg class="ic"><use href="#i-temp"/></svg></div><h3>Surveillance</h3><p>Températures, historique jusqu'à un mois et alerte quand un ventilateur s'use.</p></div>
+        <div class="tile rv d3"><div class="badge"><svg class="ic"><use href="#i-aid"/></svg></div><h3>Dépannage</h3><p>Un souci ? VORTEX en trouve la cause en quelques secondes et propose la solution.</p></div>
+      </div>
+
+      <div class="rows" style="margin-top:40px">
+        <div class="row">
+          <div class="txt rv">
+            <span class="kicker">Ventilation</span>
+            <h3>Le silence quand tout est calme, le souffle quand ça chauffe</h3>
+            <p>Chaque ventilateur suit la sonde de votre choix. Au premier lancement, VORTEX détecte vos ventilateurs, mesure leur vitesse minimale et leur attribue un profil : en quelques minutes, c'est réglé.</p>
+            <ul class="ticks">
+              <li><svg class="ic"><use href="#i-check"/></svg>Sept modes : auto, fixe, courbe, mixte, palier, cible et synchro</li>
+              <li><svg class="ic"><use href="#i-check"/></svg>Profils Silencieux, Équilibré et Performance en un clic</li>
+              <li><svg class="ic"><use href="#i-check"/></svg>Arrêt complet sous un seuil, réactivité réglable</li>
+            </ul>
+          </div>
+          <a class="shot rv d1" href="images/ventilateurs.png" data-zoom="images/ventilateurs.webp"><picture><source srcset="images/ventilateurs.webp" type="image/webp"><img src="images/ventilateurs.png" width="1280" height="820" alt="Page Ventilateurs : jauges de vitesse et choix du mode pour chaque ventilateur" loading="lazy" decoding="async"></picture></a>
+        </div>
+
+        <div class="row flip">
+          <div class="txt rv">
+            <span class="kicker">Courbes mixtes et mode cible</span>
+            <h3>Un ventilateur, plusieurs sources de chaleur</h3>
+            <p>Un ventilateur de boîtier peut suivre le processeur et la carte graphique à la fois. Le mode cible, lui, cherche seul la vitesse la plus basse qui tient la température demandée.</p>
+            <ul class="ticks">
+              <li><svg class="ic"><use href="#i-check"/></svg>Jusqu'à quatre courbes, combinées par la plus rapide, la moyenne ou la somme</li>
+              <li><svg class="ic"><use href="#i-check"/></svg>Sondes sur mesure (maximum, moyenne, écart) et import HWiNFO</li>
+              <li><svg class="ic"><use href="#i-check"/></svg>Le moins de bruit possible pour une température donnée</li>
+            </ul>
+          </div>
+          <a class="shot rv d1" href="images/courbe-mixte.png" data-zoom="images/courbe-mixte.webp"><picture><source srcset="images/courbe-mixte.webp" type="image/webp"><img src="images/courbe-mixte.png" width="1280" height="820" alt="Mode mixte avec plusieurs courbes et mode cible" loading="lazy" decoding="async"></picture></a>
+        </div>
+
+        <div class="row">
+          <div class="txt rv">
+            <span class="kicker">Dépannage automatique</span>
+            <h3>Un souci ? VORTEX trouve la cause pour vous</h3>
+            <p>Pilote, ventilateurs, sondes, températures, logiciels qui entrent en conflit : le dépannage examine votre PC en quelques secondes et explique chaque anomalie simplement.</p>
+            <ul class="ticks">
+              <li><svg class="ic"><use href="#i-check"/></svg>Diagnostic complet en quelques secondes</li>
+              <li><svg class="ic"><use href="#i-check"/></svg>Des explications claires, sans jargon</li>
+              <li><svg class="ic"><use href="#i-check"/></svg>Un bouton qui applique la solution quand c'est possible</li>
+            </ul>
+          </div>
+          <a class="shot rv d1" href="images/depannage.png" data-zoom="images/depannage.webp"><picture><source srcset="images/depannage.webp" type="image/webp"><img src="images/depannage.png" width="1280" height="820" alt="Dépannage automatique : chaque vérification et sa solution" loading="lazy" decoding="async"></picture></a>
+        </div>
+
+        <div class="row flip">
+          <div class="txt rv">
+            <span class="kicker">Écrans</span>
+            <h3>Tous vos écrans réglés d'un seul geste</h3>
+            <p>Luminosité, contraste, teinte, volume et entrée vidéo de chaque écran compatible DDC/CI, sans chercher les boutons sous l'écran. Profils Bureau, Jeu, Film et Nuit, et plages horaires qui suivent même le lever et le coucher du soleil.</p>
+            <ul class="ticks">
+              <li><svg class="ic"><use href="#i-check"/></svg>La molette au-dessus de l'icône règle la luminosité</li>
+              <li><svg class="ic"><use href="#i-check"/></svg>Plusieurs écrans harmonisés entre eux</li>
+              <li><svg class="ic"><use href="#i-check"/></svg>Luminosité baissée automatiquement après inactivité</li>
+            </ul>
+          </div>
+          <a class="shot rv d1" href="images/ecrans.png" data-zoom="images/ecrans.webp"><picture><source srcset="images/ecrans.webp" type="image/webp"><img src="images/ecrans.png" width="1280" height="820" alt="Page Écrans : luminosité, contraste, teinte et profils de chaque écran" loading="lazy" decoding="async"></picture></a>
+        </div>
+
+        <div class="row">
+          <div class="txt rv">
+            <span class="kicker">Surveillance</span>
+            <h3>Votre PC sous surveillance, jour et nuit</h3>
+            <p>Toutes les températures du processeur, de la carte graphique, de la carte mère et des disques, un historique de 15 minutes à un mois et un test thermique qui évalue votre refroidissement.</p>
+            <ul class="ticks">
+              <li><svg class="ic"><use href="#i-check"/></svg>Minimum et maximum, en °C ou en °F</li>
+              <li><svg class="ic"><use href="#i-check"/></svg>Un ventilateur qui s'use ou s'encrasse est signalé avant la panne</li>
+              <li><svg class="ic"><use href="#i-check"/></svg>Seuil critique : tous les ventilateurs passent à 100 %</li>
+            </ul>
+          </div>
+          <a class="shot rv d1" href="images/historique.png" data-zoom="images/historique.webp"><picture><source srcset="images/historique.webp" type="image/webp"><img src="images/historique.png" width="1280" height="820" alt="Page Historique : une journée de températures et de vitesses" loading="lazy" decoding="async"></picture></a>
+        </div>
+      </div>
+    </section>
+
+    <section id="plus">
+      <div class="head rv">
+        <span class="kicker">Et aussi</span>
+        <h2>Pensé jusque dans les détails</h2>
+      </div>
+      <div class="bento">
+        <div class="tile rv"><div class="badge"><svg class="ic"><use href="#i-window"/></svg></div><h3>Fenêtre rapide</h3><p>Un clic sur l'icône près de l'horloge : températures, profils, boost et luminosité, sans ouvrir VORTEX.</p></div>
+        <div class="tile rv d1"><div class="badge"><svg class="ic"><use href="#i-sliders"/></svg></div><h3>Profils personnels</h3><p>« Jeu », « Nuit »… Toute votre configuration rappelée d'un clic, avec son mode d'alimentation Windows.</p></div>
+        <div class="tile rv d2"><div class="badge"><svg class="ic"><use href="#i-clock"/></svg></div><h3>Automatismes</h3><p>Profil selon le jeu lancé, plages horaires, raccourcis clavier, panneau flottant par-dessus les jeux.</p></div>
+        <div class="tile rv d3"><div class="badge"><svg class="ic"><use href="#i-shield"/></svg></div><h3>Filet de sécurité</h3><p>Alertes avant la surchauffe. À la fermeture, chaque ventilateur est rendu au BIOS.</p></div>
+        <div class="tile rv"><div class="badge"><svg class="ic"><use href="#i-bolt"/></svg></div><h3>Léger</h3><p>Réduit, VORTEX rend sa mémoire à Windows (une cinquantaine de Mo) et se rouvre en un dixième de seconde.</p></div>
+        <div class="tile rv d1"><div class="badge"><svg class="ic"><use href="#i-update"/></svg></div><h3>Mises à jour vérifiées</h3><p>Chaque nouvelle version est vérifiée avant d'être installée, en un clic ou automatiquement.</p></div>
+        <div class="tile rv d2"><div class="badge"><svg class="ic"><use href="#i-book"/></svg></div><h3>Notice intégrée</h3><p>Un bouton AIDE sur chaque page ouvre le bon chapitre de la <a href="notice.html">notice</a>. Assistant au premier démarrage.</p></div>
+        <div class="tile rv d3"><div class="badge"><svg class="ic"><use href="#i-building"/></svg></div><h3>Prêt pour le parc</h3><p>Installation silencieuse (Intune, SCCM, GPO), mêmes réglages sur tous les postes, politique commune.</p></div>
+      </div>
+    </section>
+
+    <section id="confidentialite">
+      <div class="privacy">
+        <div class="head rv">
+          <span class="kicker">Respect de votre vie privée</span>
+          <h2>Vos données restent chez vous</h2>
+          <p>Pas de compte, pas de publicité, rien qui vous identifie. Le détail est dans la <a href="confidentialite.html">politique de confidentialité</a>.</p>
+        </div>
+        <ul>
+          <li class="rv"><svg class="ic"><use href="#i-user-off"/></svg><span><b>Aucun compte à créer.</b> Vous installez, c'est tout.</span></li>
+          <li class="rv d1"><svg class="ic"><use href="#i-lock"/></svg><span><b>Rapports d'erreur uniquement avec votre accord</b>, sans nom, sans e-mail, sans nom du PC ni adresse IP. Modifiable à tout moment.</span></li>
+          <li class="rv d2"><svg class="ic"><use href="#i-home"/></svg><span><b>Réglages et historique sur votre PC</b>, dans <code>%AppData%\VORTEX Control</code>.</span></li>
+          <li class="rv d3"><svg class="ic"><use href="#i-eye-off"/></svg><span><b>Ce site ne vous suit pas</b> : aucun cookie, aucune mesure d'audience.</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="captures">
+      <div class="head rv">
+        <span class="kicker">Aperçu</span>
+        <h2>VORTEX en images</h2>
+        <p>Captures de la version 2.0, sur une configuration de démonstration. Cliquez sur une image pour l'agrandir.</p>
+      </div>
+      <div class="strip-nav" aria-hidden="true">
+        <button type="button" data-dir="-1" tabindex="-1"><svg class="ic"><use href="#i-left"/></svg></button>
+        <button type="button" data-dir="1" tabindex="-1"><svg class="ic"><use href="#i-right"/></svg></button>
+      </div>
+      <div class="strip rv" tabindex="0" aria-label="Captures d'écran de VORTEX">
+        <figure><a class="shot" href="images/accueil.png" data-zoom="images/accueil.webp"><picture><source srcset="images/accueil.webp" type="image/webp"><img src="images/accueil.png" width="1280" height="820" alt="Accueil" loading="lazy" decoding="async"></picture></a><figcaption>L'accueil : l'état du PC, le score de fraîcheur et les profils en grandes tuiles.</figcaption></figure>
+        <figure><a class="shot" href="images/ventilateurs.png" data-zoom="images/ventilateurs.webp"><picture><source srcset="images/ventilateurs.webp" type="image/webp"><img src="images/ventilateurs.png" width="1280" height="820" alt="Ventilateurs" loading="lazy" decoding="async"></picture></a><figcaption>Sept modes par ventilateur, chacun expliqué en une phrase.</figcaption></figure>
+        <figure><a class="shot" href="images/courbe-mixte.png" data-zoom="images/courbe-mixte.webp"><picture><source srcset="images/courbe-mixte.webp" type="image/webp"><img src="images/courbe-mixte.png" width="1280" height="820" alt="Courbe mixte" loading="lazy" decoding="async"></picture></a><figcaption>Mode mixte : plusieurs sondes, plusieurs courbes.</figcaption></figure>
+        <figure class="narrow"><a class="shot" href="images/fenetre-rapide.png" data-zoom="images/fenetre-rapide.webp"><picture><source srcset="images/fenetre-rapide.webp" type="image/webp"><img src="images/fenetre-rapide.png" width="340" height="393" alt="Fenêtre rapide" loading="lazy" decoding="async"></picture></a><figcaption>La fenêtre rapide, d'un clic sur l'icône près de l'horloge.</figcaption></figure>
+        <figure><a class="shot" href="images/depannage.png" data-zoom="images/depannage.webp"><picture><source srcset="images/depannage.webp" type="image/webp"><img src="images/depannage.png" width="1280" height="820" alt="Dépannage" loading="lazy" decoding="async"></picture></a><figcaption>Le dépannage automatique et ses solutions.</figcaption></figure>
+        <figure><a class="shot" href="images/capteurs.png" data-zoom="images/capteurs.webp"><picture><source srcset="images/capteurs.webp" type="image/webp"><img src="images/capteurs.png" width="1280" height="820" alt="Capteurs" loading="lazy" decoding="async"></picture></a><figcaption>Toutes les températures, avec minimum et maximum.</figcaption></figure>
+        <figure><a class="shot" href="images/ecrans.png" data-zoom="images/ecrans.webp"><picture><source srcset="images/ecrans.webp" type="image/webp"><img src="images/ecrans.png" width="1280" height="820" alt="Écrans" loading="lazy" decoding="async"></picture></a><figcaption>Luminosité, contraste, teinte et profils de chaque écran.</figcaption></figure>
+        <figure><a class="shot" href="images/historique.png" data-zoom="images/historique.webp"><picture><source srcset="images/historique.webp" type="image/webp"><img src="images/historique.png" width="1280" height="820" alt="Historique" loading="lazy" decoding="async"></picture></a><figcaption>Une journée de températures et de vitesses.</figcaption></figure>
+        <figure><a class="shot" href="images/notice.png" data-zoom="images/notice.webp"><picture><source srcset="images/notice.webp" type="image/webp"><img src="images/notice.png" width="1280" height="820" alt="Notice intégrée" loading="lazy" decoding="async"></picture></a><figcaption>La notice intégrée, ouverte au bon chapitre.</figcaption></figure>
+      </div>
+    </section>
+
+    <section id="installer">
+      <div class="head center rv">
+        <span class="kicker">Installation</span>
+        <h2>Installé en une minute</h2>
+        <p>Un seul fichier, tout est inclus : rien d'autre à télécharger.</p>
+      </div>
+      <div class="steps">
+        <div class="step rv"><h3>Téléchargez</h3><p>Le fichier <code>VORTEX-Control-Setup-<span data-version>2.0.1</span>.exe</code>, depuis le bouton ci-dessus ou la <a href="https://github.com/Rafale-78/vortex-control/releases/latest">page des versions</a>.</p></div>
+        <div class="step rv d1"><h3>Autorisez</h3><p>Acceptez la demande de Windows : VORTEX a besoin des droits administrateur pour dialoguer avec la puce des ventilateurs de la carte mère.</p></div>
+        <div class="step rv d2"><h3>Laissez-vous guider</h3><p>L'installeur ajoute le pilote PawnIO s'il manque. Au premier lancement, un assistant détecte vos ventilateurs, les calibre et leur attribue un profil.</p></div>
+      </div>
+      <p class="note rv"><b>Avertissement de Windows :</b> VORTEX est un logiciel indépendant, pas encore signé par un certificat payant. Windows peut afficher « Windows a protégé votre ordinateur » : cliquez sur <em>Informations complémentaires</em>, puis sur <em>Exécuter quand même</em>. Pour vérifier votre téléchargement, comparez son empreinte SHA-256 avec celle publiée dans <code>SHA256SUMS.txt</code>, sur la page des versions.</p>
+    </section>
+
+    <section id="questions">
+      <div class="head center rv">
+        <span class="kicker">Questions</span>
+        <h2>Vous vous demandez peut-être…</h2>
+      </div>
+      <div class="faq">
+        <details class="rv"><summary>VORTEX est-il vraiment gratuit ?</summary><p>Oui : pas de publicité, pas de version payante, pas de compte à créer, pas d'abonnement. Toutes les fonctions sont incluses.</p></details>
+        <details class="rv"><summary>Mon PC est-il compatible ?</summary><p>VORTEX fonctionne sous Windows 10 et 11 en 64 bits. Il pilote les ventilateurs branchés sur la carte mère et ceux des cartes graphiques AMD et NVIDIA, et règle les écrans compatibles DDC/CI ainsi que l'écran intégré des portables. Le plus simple est d'essayer : le dépannage vous dit tout de suite ce qu'il trouve sur votre PC.</p></details>
+        <details class="rv"><summary>Quelque chose ne fonctionne pas ?</summary><p>Commencez par <b>Aide → Dépannage</b> dans VORTEX : il vérifie votre PC en quelques secondes (pilote, ventilateurs, sondes, températures, logiciels concurrents, écrans) et propose la solution, souvent avec un bouton qui l'applique. La <a href="notice.html">notice</a> détaille aussi les pannes courantes.</p></details>
+        <details class="rv"><summary>Mes ventilateurs de boîtier n'apparaissent pas, ou ne réagissent pas.</summary><p>Ils sont probablement branchés sur un hub passif livré avec le boîtier : aucun logiciel ne peut alors les piloter un par un. Branchez-les (ou le câble PWM du hub) sur une prise SYS_FAN de la carte mère. La page Ventilateurs repère aussi les hubs USB connus (Corsair, NZXT, Lian Li…) et propose le logiciel du fabricant si besoin.</p></details>
+        <details class="rv"><summary>Pourquoi des droits administrateur et un pilote ?</summary><p>Les ventilateurs de la carte mère se commandent par une puce (Super I/O) inaccessible sans pilote noyau. VORTEX utilise PawnIO, le pilote signé et libre qu'utilisent aussi FanControl et LibreHardwareMonitor ; son installeur officiel est inclus.</p></details>
+        <details class="rv"><summary>VORTEX envoie-t-il mes données quelque part ?</summary><p>Rien qui permette de vous identifier directement, et rien sans votre accord. Au premier lancement, VORTEX vous demande si vous acceptez d'envoyer des <b>rapports d'erreur et un compteur d'utilisation, sans nom ni adresse IP</b> ; si vous refusez, rien n'est envoyé. Si vous acceptez : le texte de l'erreur et l'endroit du programme, les dernières lignes du journal de VORTEX (anonymisées), les versions de VORTEX et de Windows, la langue, si VORTEX a les droits d'administrateur, le matériel (modèle du processeur, de la carte graphique et des puces de ventilateurs, nombre de ventilateurs et de sondes) et un numéro tiré au hasard sur votre PC, et, quand un ventilateur, un disque ou un écran n'est pas reconnu, la raison trouvée avec le modèle de la carte mère ou du PC et celui du matériel concerné, envoyés à Sentry (serveurs dans l'Union européenne, conservation 90 jours au plus). Jamais votre nom, votre adresse e-mail, le nom du PC ni votre adresse IP. Ce choix est modifiable à tout moment dans Réglages → Confidentialité. Pour le reste, VORTEX ne se connecte à internet que si vous le demandez (recherche de mise à jour, test de connexion) ou si vous avez activé la mise à jour automatique. Vos réglages restent dans <code>%AppData%\VORTEX Control</code>. Aucune donnée n'est vendue. Finalités, durée de conservation et droits : voir la page <a href="confidentialite.html">Confidentialité</a>.</p></details>
+        <details class="rv"><summary>Que se passe-t-il si je ferme VORTEX ?</summary><p>Chaque ventilateur est rendu au BIOS, qui reprend sa régulation habituelle : rien ne reste bloqué à une vitesse. Seule exception : après un plantage ou un arrêt forcé de VORTEX, seul un redémarrage du PC rend la carte mère au BIOS ; VORTEX vous le signale et, d'ici là, laisse ses ventilateurs à 100 % en se fermant.</p></details>
+        <details class="rv"><summary>Mon écran n'apparaît pas « pris en charge ».</summary><p>Activez l'option DDC/CI dans le menu de l'écran (boutons physiques), puis cliquez sur Actualiser dans la page Écrans.</p></details>
+        <details class="rv"><summary>Combien de mémoire et de processeur utilise VORTEX ?</summary><p>Fenêtre ouverte, environ 200 Mo. Réduit près de l'horloge (ce qu'il est la plupart du temps), il rend sa mémoire à Windows et descend vers 50 Mo ; une mesure par seconde, presque rien côté processeur. Réglages → Démarrage affiche la mémoire utilisée. Pour une réouverture encore plus rapide, décochez « Libérer la mémoire quand VORTEX est réduit ».</p></details>
+        <details class="rv"><summary>Je gère un parc de PC : peut-on déployer VORTEX ?</summary><p>Oui. Installation silencieuse : <code>VORTEX-Control-Setup-x.y.z.exe /VERYSILENT /SUPPRESSMSGBOXES /NORESTART</code> (ajoutez <code>/LOG</code> pour obtenir un journal). Désinstallation : <code>"C:\Program Files\VORTEX Control\unins000.exe" /VERYSILENT /SUPPRESSMSGBOXES /NORESTART</code>. Conservez toujours <code>/NORESTART</code> : sans lui, Windows peut redémarrer pour finir de supprimer un fichier encore ouvert. Les mêmes réglages sur tous les postes : exportez-les depuis un PC modèle (Réglages → Sauvegarde) et ajoutez <code>/FLEETSETTINGS="chemin\reglages.json"</code> ; chaque nouvel utilisateur part de ces réglages. Une politique commune : <code>/FLEETPOLICY="chemin\policy.json"</code> désactive les mises à jour (vous gérez les versions) et les rapports d'erreur. VORTEX ne lit ces fichiers que si seuls les administrateurs peuvent les modifier. Il ne tourne qu'une fois par PC, quel que soit le nombre de sessions ouvertes, et aucun compte n'est demandé.</p></details>
+      </div>
+    </section>
+
+    <section id="soutenir" data-soutien hidden>
+      <div class="box rv">
+        <span class="kicker"><svg class="ic" style="width:16px;height:16px;vertical-align:-3px"><use href="#i-heart"/></svg> Soutenir</span>
+        <h2>VORTEX vous est utile ?</h2>
+        <p>VORTEX est gratuit, sans publicité, et le restera. Un don, même modeste, aide à le faire vivre et à l'améliorer.</p>
+        <a class="btn btn-main" id="lien-soutien" href="#">Faire un don</a>
+      </div>
+    </section>
+
+    <section>
+      <div class="final rv">
+        <span class="kicker">Gratuit, pour toujours</span>
+        <h2>Reprenez le contrôle de votre PC</h2>
+        <p>Une minute d'installation, et vos ventilateurs ne soufflent plus que lorsqu'il le faut.</p>
+        <div class="cta">
+          <a class="btn btn-main btn-lg" href="https://github.com/Rafale-78/vortex-control/releases/download/v2.0.1/VORTEX-Control-Setup-2.0.1.exe"><svg class="ic"><use href="#i-down"/></svg>Télécharger VORTEX</a>
+          <a class="btn btn-ghost btn-lg" href="notice.html">Lire la notice</a>
+        </div>
+        <p class="dl-meta" style="margin:16px auto 0">Version <span data-version>2.0.1</span> · Windows 10 et 11, 64 bits · <span data-size>68 Mo</span> · Français, English, Español, Deutsch, Italiano</p>
+      </div>
+    </section>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div>
+        <a class="brand" href="#contenu">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#00e5ff" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M12,1.8 L20.8,6.9 L20.8,17.1 L12,22.2 L3.2,17.1 L3.2,6.9 Z M8,9 L12,15.6 L16,9"/></svg>
+          VORTEX CONTROL
+        </a>
+        <p>Chaque ventilateur, chaque écran, sous contrôle. Logiciel gratuit pour Windows 10 et 11, sans publicité et sans compte.</p>
+      </div>
+      <div>
+        <h4>Aide</h4>
+        <ul>
+          <li><a href="notice.html">Notice d'utilisation</a></li>
+          <li><a href="#questions">Questions fréquentes</a></li>
+          <li><a href="https://github.com/Rafale-78/vortex-control/issues">Signaler un problème</a></li>
+          <li><a class="mail" data-u="vortex.support.contact" data-d="gmail.com">vortex.support.contact [arobase] gmail.com</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Informations</h4>
+        <ul>
+          <li><a href="https://github.com/Rafale-78/vortex-control/releases/latest">Toutes les versions</a></li>
+          <li><a href="mentions-legales.html">Mentions légales</a></li>
+          <li><a href="confidentialite.html">Confidentialité</a></li>
+          <li><a href="#soutenir" data-soutien hidden>Soutenir VORTEX</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="legal">
+      Un problème ? Dans VORTEX, Aide → Dépannage en identifie la cause ; à défaut, Réglages → « Signaler un problème » ouvre la page GitHub déjà remplie. Ce site n'utilise aucun cookie ni aucune mesure d'audience.<br>
+      VORTEX Control, logiciel gratuit, code fermé. Composants tiers : <a href="https://github.com/LibreHardwareMonitor/LibreHardwareMonitor">LibreHardwareMonitor</a>, <a href="https://github.com/Blacktempel/DiskInfoToolkit">DiskInfoToolkit</a>, <a href="https://github.com/Blacktempel/BlackSharp">BlackSharp</a> et <a href="https://github.com/Blacktempel/RAMSPDToolkit">RAMSPDToolkit</a> (MPL-2.0), HidSharp (Apache-2.0), PawnIO (GPL-2.0, © namazso), .NET, WPF, CommunityToolkit.Mvvm et Sentry (MIT) ; licences fournies avec le logiciel.
+    </div>
+  </div>
+</footer>
+
+<dialog class="zoom" id="zoom" aria-label="Capture agrandie">
+  <button type="button" aria-label="Fermer">×</button>
+  <img alt="">
+</dialog>
+
+<script>
+(function () {
+  // Adresse assemblée dans le navigateur : les robots qui ramassent les adresses dans le code de la page ne la voient pas.
+  document.querySelectorAll("a.mail").forEach(function (a) {
+    var address = a.dataset.u + "@" + a.dataset.d;
+    a.href = "mailto:" + address;
+    a.textContent = address;
+  });
+
+  // En-tête opaque dès qu'on a défilé.
+  var top = document.getElementById("top");
+  function onScroll() { top.classList.toggle("scrolled", window.scrollY > 8); }
+  window.addEventListener("scroll", onScroll, { passive: true });
+  onScroll();
+
+  // Menu sur téléphone.
+  var burger = document.querySelector(".burger"), menu = document.getElementById("menu");
+  function setMenu(open) {
+    menu.classList.toggle("open", open);
+    burger.setAttribute("aria-expanded", String(open));
+    burger.setAttribute("aria-label", open ? "Fermer le menu" : "Ouvrir le menu");
+  }
+  burger.addEventListener("click", function () { setMenu(!menu.classList.contains("open")); });
+  menu.addEventListener("click", function (e) { if (e.target.closest("a")) setMenu(false); });
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape") setMenu(false); });
+
+  // Apparition au défilement.
+  var items = document.querySelectorAll(".rv");
+  if ("IntersectionObserver" in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) { entry.target.classList.add("in"); io.unobserve(entry.target); }
+      });
+    }, { rootMargin: "0px 0px -40px 0px", threshold: 0.05 });
+    items.forEach(function (el) { io.observe(el); });
+  } else {
+    items.forEach(function (el) { el.classList.add("in"); });
+  }
+
+  // Galerie : flèches.
+  var strip = document.querySelector(".strip");
+  document.querySelectorAll(".strip-nav button").forEach(function (b) {
+    b.addEventListener("click", function () {
+      var step = strip.querySelector("figure").getBoundingClientRect().width + 20;
+      strip.scrollBy({ left: step * Number(b.dataset.dir), behavior: "smooth" });
+    });
+  });
+
+  // Agrandissement des captures (sans script, le lien ouvre simplement l'image).
+  var dialog = document.getElementById("zoom");
+  if (dialog && typeof dialog.showModal === "function") {
+    var big = dialog.querySelector("img");
+    document.querySelectorAll("[data-zoom]").forEach(function (link) {
+      link.addEventListener("click", function (e) {
+        e.preventDefault();
+        big.src = link.dataset.zoom;
+        big.alt = link.querySelector("img").alt;
+        dialog.showModal();
+      });
+    });
+    dialog.querySelector("button").addEventListener("click", function () { dialog.close(); });
+    dialog.addEventListener("click", function (e) { if (e.target === dialog || e.target === big) dialog.close(); });
+  }
+})();
+</script>
+</body>
+</html>

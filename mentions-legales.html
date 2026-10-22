@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mentions légales — VORTEX Control</title>
+<meta name="description" content="Mentions légales du site VORTEX Control : éditeur, hébergeur, propriété intellectuelle, responsabilité.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#05080f">
+<meta name="color-scheme" content="dark">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2300e5ff' stroke-width='1.6' stroke-linejoin='round'%3E%3Cpath d='M12,1.8 L20.8,6.9 L20.8,17.1 L12,22.2 L3.2,17.1 L3.2,6.9 Z M8,9 L12,15.6 L16,9'/%3E%3C/svg%3E">
+<style>
+  :root {
+    --bg: #05080f; --card: rgba(13, 22, 40, .78); --card-hi: rgba(17, 29, 52, .9);
+    --line: rgba(122, 162, 222, .15); --line-hi: rgba(0, 229, 255, .38);
+    --cyan: #00e5ff; --magenta: #ff2bd6; --violet: #7b5cff; --amber: #ffb224; --green: #2bffa3;
+    --text: #e8f0ff; --dim: #a6b5d1; --mute: #7b8cab;
+    --font: "Segoe UI Variable Text", "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+    --display: "Segoe UI Variable Display", "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+    --tech: Bahnschrift, "Segoe UI", system-ui, sans-serif;
+    --ease: cubic-bezier(.2, .7, .2, 1);
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; scroll-padding-top: 88px; -webkit-text-size-adjust: 100%; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.65 var(--font); overflow-x: hidden; }
+  body::before { content: ""; position: fixed; inset: -20vmax; z-index: -2; pointer-events: none; background: radial-gradient(38vmax 30vmax at 78% 12%, rgba(123, 92, 255, .18), transparent 70%), radial-gradient(34vmax 28vmax at 12% 8%, rgba(0, 229, 255, .12), transparent 70%); animation: drift 28s ease-in-out infinite alternate; }
+  body::after { content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none; background: linear-gradient(rgba(0, 229, 255, .045) 1px, transparent 1px) 0 0 / 44px 44px, linear-gradient(90deg, rgba(0, 229, 255, .045) 1px, transparent 1px) 0 0 / 44px 44px; -webkit-mask-image: radial-gradient(ellipse 90% 60% at 50% 0%, #000 30%, transparent 85%); mask-image: radial-gradient(ellipse 90% 60% at 50% 0%, #000 30%, transparent 85%); }
+  @keyframes drift { to { transform: translate3d(4vmax, 3vmax, 0) rotate(8deg); } }
+  a { color: var(--cyan); text-underline-offset: 3px; }
+  code { font-family: "Cascadia Mono", Consolas, monospace; font-size: .88em; color: var(--cyan); background: rgba(0, 229, 255, .07); border-radius: 5px; padding: 1px 4px; white-space: nowrap; }
+  .wrap { width: min(1180px, 100% - 40px); margin-inline: auto; }
+  .ic { width: 22px; height: 22px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+  .skip { position: absolute; left: 12px; top: -60px; z-index: 100; background: var(--cyan); color: #021016; padding: 10px 16px; border-radius: 8px; font-weight: 700; }
+  .skip:focus { top: 12px; }
+  :focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; border-radius: 6px; }
+
+  .top { position: sticky; top: 0; z-index: 50; transition: background .3s, border-color .3s, box-shadow .3s; border-bottom: 1px solid transparent; }
+  .top.scrolled { background: rgba(5, 8, 15, .78); -webkit-backdrop-filter: blur(14px) saturate(140%); backdrop-filter: blur(14px) saturate(140%); border-bottom-color: var(--line); box-shadow: 0 10px 30px rgba(0, 0, 0, .25); }
+  .top .wrap { display: flex; align-items: center; gap: 20px; height: 68px; }
+  .brand { display: flex; align-items: center; gap: 11px; color: var(--text); text-decoration: none; font: 700 15px/1 var(--tech); letter-spacing: .14em; margin-right: auto; }
+  .brand svg { width: 30px; height: 30px; filter: drop-shadow(0 0 8px rgba(0, 229, 255, .5)); }
+  .menu { display: flex; align-items: center; gap: 4px; }
+  .menu a:not(.btn) { color: var(--dim); text-decoration: none; font-size: 14.5px; padding: 8px 12px; border-radius: 8px; transition: color .2s, background .2s; }
+  .menu a:not(.btn):hover { color: var(--text); background: rgba(255, 255, 255, .05); }
+  .menu .btn { margin-left: 10px; }
+  .burger { display: none; background: none; border: 1px solid var(--line); color: var(--text); width: 42px; height: 42px; border-radius: 10px; cursor: pointer; place-items: center; }
+  .btn { position: relative; display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 15px 26px; border-radius: 12px; font: 650 16px/1.1 var(--font); text-decoration: none; transition: transform .25s var(--ease), box-shadow .25s; overflow: hidden; isolation: isolate; }
+  .btn-main { color: #021016; background: linear-gradient(100deg, var(--cyan), #57b6ff 55%, #8f8bff); box-shadow: 0 8px 30px rgba(0, 229, 255, .35), inset 0 1px 0 rgba(255, 255, 255, .45); }
+  .btn-main:hover { transform: translateY(-2px); box-shadow: 0 14px 40px rgba(0, 229, 255, .5), inset 0 1px 0 rgba(255, 255, 255, .45); }
+  .btn-sm { padding: 10px 16px; font-size: 14px; border-radius: 10px; }
+
+  .narrow { max-width: 900px; }
+  .page-head { padding: 52px 0 34px; }
+  .kicker { display: inline-block; font: 700 12.5px/1 var(--tech); letter-spacing: .22em; color: var(--cyan); text-transform: uppercase; margin-bottom: 14px; }
+  h1 { font: 700 clamp(2.2rem, 4.4vw, 3.4rem)/1.06 var(--display); letter-spacing: -.03em; margin: 0 0 16px; }
+  .grad { background: linear-gradient(95deg, var(--cyan) 0%, #7fa8ff 45%, var(--magenta) 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .lead { color: var(--dim); font-size: 1.1rem; margin: 0; }
+  .chips { display: flex; flex-wrap: wrap; gap: 10px; list-style: none; padding: 0; margin: 24px 0 0; }
+  .chips li { display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; border: 1px solid rgba(43, 255, 163, .3); background: rgba(43, 255, 163, .06); border-radius: 999px; font-size: 14.5px; }
+  .chips .ic { width: 18px; height: 18px; color: var(--green); stroke-width: 2.2; }
+
+  .doc section { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 28px 32px; margin-bottom: 18px; }
+  .doc h2 { display: flex; align-items: center; gap: 12px; font: 700 clamp(1.25rem, 2.2vw, 1.55rem)/1.2 var(--display); letter-spacing: -.015em; margin: 0 0 14px; }
+  .doc h2 .ic { width: 38px; height: 38px; padding: 8px; border-radius: 10px; color: var(--cyan); background: linear-gradient(140deg, rgba(0, 229, 255, .18), rgba(123, 92, 255, .14)); border: 1px solid rgba(0, 229, 255, .3); }
+  .doc p { margin: 0 0 12px; color: var(--dim); }
+  .doc p:last-child { margin-bottom: 0; }
+  .doc b { color: var(--text); font-weight: 650; }
+  .doc ul { margin: 0 0 14px; padding: 0; list-style: none; }
+  .doc li { position: relative; padding-left: 24px; margin-bottom: 8px; color: var(--dim); }
+  .doc li::before { content: ""; position: absolute; left: 6px; top: .6em; width: 7px; height: 7px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 8px rgba(0, 229, 255, .7); }
+  .doc .never { border-color: rgba(43, 255, 163, .25); background: radial-gradient(500px 220px at 0% 0%, rgba(43, 255, 163, .08), transparent 70%), var(--card); }
+  .doc .never h2 .ic { color: var(--green); background: rgba(43, 255, 163, .1); border-color: rgba(43, 255, 163, .35); }
+  .doc .never li { padding-left: 32px; }
+  .doc .never li::before { content: none; }
+  .doc .never li .ic { position: absolute; left: 0; top: 2px; width: 20px; height: 20px; color: var(--green); stroke-width: 2.2; }
+
+  footer { margin-top: 80px; border-top: 1px solid var(--line); padding: 44px 0 56px; color: var(--mute); font-size: 14px; }
+  .foot { display: grid; grid-template-columns: 1.3fr 1fr 1fr; gap: 32px; margin-bottom: 30px; }
+  .foot h4 { color: var(--text); font: 650 14px/1 var(--display); margin: 4px 0 14px; letter-spacing: .02em; }
+  .foot ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
+  .foot a { color: var(--dim); text-decoration: none; }
+  .foot a:hover { color: var(--cyan); }
+  .foot p { margin: 12px 0 0; max-width: 30em; }
+  .legal { border-top: 1px solid var(--line); padding-top: 22px; font-size: 13px; line-height: 1.7; }
+  [hidden] { display: none !important; }
+
+  @media (max-width: 860px) {
+    .burger { display: grid; }
+    .menu { position: absolute; top: 68px; left: 0; right: 0; flex-direction: column; align-items: stretch; gap: 2px; padding: 12px 20px 20px; background: rgba(5, 8, 15, .96); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); border-bottom: 1px solid var(--line); transform: translateY(-8px); opacity: 0; visibility: hidden; transition: opacity .25s, transform .25s, visibility .25s; }
+    .menu.open { transform: none; opacity: 1; visibility: visible; }
+    .menu a:not(.btn) { padding: 12px 10px; font-size: 16px; }
+    .menu .btn { margin: 8px 0 0; }
+    .foot { grid-template-columns: 1fr 1fr; }
+    .foot > div:first-child { grid-column: 1 / -1; }
+  }
+  @media (max-width: 560px) {
+    .wrap { width: calc(100% - 32px); }
+    .doc section { padding: 22px 20px; }
+    .doc h2 .ic { width: 34px; height: 34px; padding: 7px; }
+    code { white-space: normal; overflow-wrap: anywhere; }
+    .foot { grid-template-columns: 1fr; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#contenu">Aller au contenu</a>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-down" viewBox="0 0 24 24"><path d="M12 3.5v11.5M7 10.5l5 5 5-5M5 20.5h14"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.6"/><path d="M5 20c.8-3.4 3.6-5.4 7-5.4s6.2 2 7 5.4"/></symbol>
+  <symbol id="i-server" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="7" rx="1.5"/><rect x="4" y="13" width="16" height="7" rx="1.5"/><path d="M8 7.5h.01M8 16.5h.01"/></symbol>
+  <symbol id="i-copyright" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M14.8 9.6a3.6 3.6 0 1 0 0 4.8"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 4.6-3.4 8-8 9-4.6-1-8-4.4-8-9V6z"/><path d="M8.6 12.2l2.4 2.4 4.4-4.8"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4.5" y="10.5" width="15" height="10" rx="2"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></symbol>
+  <symbol id="i-scale" viewBox="0 0 24 24"><path d="M12 4v16M7 20h10M5 7h14M5 7l-2.5 6a3 3 0 0 0 5 0zM19 7l-2.5 6a3 3 0 0 0 5 0z"/></symbol>
+</svg>
+
+<header class="top" id="top">
+  <div class="wrap">
+    <a class="brand" href="index.html" aria-label="VORTEX Control, accueil">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#00e5ff" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M12,1.8 L20.8,6.9 L20.8,17.1 L12,22.2 L3.2,17.1 L3.2,6.9 Z M8,9 L12,15.6 L16,9"/></svg>
+      VORTEX CONTROL
+    </a>
+    <button class="burger" type="button" aria-expanded="false" aria-controls="menu" aria-label="Ouvrir le menu"><svg class="ic"><use href="#i-menu"/></svg></button>
+    <nav class="menu" id="menu" aria-label="Menu principal">
+      <a href="index.html#fonctions">Fonctions</a>
+      <a href="index.html#captures">Captures</a>
+      <a href="index.html#installer">Installer</a>
+      <a href="index.html#questions">Questions</a>
+      <a href="notice.html">Notice</a>
+      <a href="index.html#soutenir" data-soutien hidden>Soutenir</a>
+      <a class="btn btn-main btn-sm" href="https://github.com/Rafale-78/vortex-control/releases/download/v2.0.1/VORTEX-Control-Setup-2.0.1.exe"><svg class="ic"><use href="#i-down"/></svg>Télécharger</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap narrow" id="contenu">
+  <div class="page-head">
+    <span class="kicker">Informations légales</span>
+    <h1>Mentions <span class="grad">légales</span></h1>
+    <p class="lead">Informations prévues par l'article 1-1 de la loi n° 2004-575 du 21 juin 2004 pour la confiance dans l'économie numérique (LCEN). Dernière mise à jour : 21 octobre 2026.</p>
+  </div>
+
+  <div class="doc">
+    <section>
+      <h2><svg class="ic"><use href="#i-user"/></svg>Éditeur</h2>
+      <p>Ce site et le logiciel VORTEX Control sont édités à titre non professionnel par une personne physique, sous le nom <b>VORTEX</b>. Ils ne donnent lieu à aucune vente, aucun abonnement ni aucune publicité.</p>
+      <p>Comme le permet l'article 1-1, II, de la LCEN à un éditeur non professionnel, l'éditeur ne rend publiques que les coordonnées de son hébergeur, indiquées ci-dessous ; l'hébergeur est tenu au secret professionnel sur son identité, sauf à l'égard de l'autorité judiciaire.</p>
+      <p><b>Contact :</b> <a class="mail" data-u="vortex.support.contact" data-d="gmail.com">vortex.support.contact [arobase] gmail.com</a>, ou un ticket sur la <a href="https://github.com/Rafale-78/vortex-control/issues">page GitHub du projet</a>.</p>
+    </section>
+
+    <section>
+      <h2><svg class="ic"><use href="#i-server"/></svg>Hébergeur</h2>
+      <p><b>GitHub, Inc.</b> (service GitHub Pages), 88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, États-Unis. Téléphone : +1 877 448 4820. Site : <a href="https://github.com">github.com</a>.</p>
+    </section>
+
+    <section>
+      <h2><svg class="ic"><use href="#i-copyright"/></svg>Propriété intellectuelle</h2>
+      <p>Le logiciel VORTEX Control, son nom, son logo, les textes et les captures de ce site appartiennent à leur auteur. Les captures sont réalisées sur une configuration de démonstration. Le logiciel est gratuit, son code n'est pas public ; sa licence d'utilisation est fournie avec lui (fichier <code>LICENCE.txt</code>).</p>
+      <p>VORTEX utilise des composants libres (LibreHardwareMonitor, DiskInfoToolkit, BlackSharp, RAMSPDToolkit, HidSharp, PawnIO, .NET, WPF, CommunityToolkit.Mvvm, Sentry) sous leurs propres licences, fournies avec le logiciel. Les marques citées (Windows, AMD, NVIDIA, Intel, Corsair, NZXT, Lian Li…) appartiennent à leurs propriétaires ; VORTEX n'est affilié à aucune d'elles.</p>
+    </section>
+
+    <section>
+      <h2><svg class="ic"><use href="#i-shield"/></svg>Responsabilité</h2>
+      <p>VORTEX est fourni gratuitement, « en l'état ». Il pilote du matériel (ventilateurs, écrans) avec des sécurités : seuil critique qui met les ventilateurs pilotés à 100 %, retour au BIOS à la fermeture. L'utilisateur reste responsable des réglages qu'il choisit. Dans les limites autorisées par la loi, l'éditeur ne saurait être tenu responsable des dommages indirects liés à l'utilisation du site ou du logiciel.</p>
+      <p>Les informations de ce site sont données de bonne foi et peuvent comporter des erreurs ou des omissions. Les liens vers des sites tiers sont fournis pour information : l'éditeur n'est pas responsable de leur contenu.</p>
+    </section>
+
+    <section>
+      <h2><svg class="ic"><use href="#i-lock"/></svg>Données personnelles et cookies</h2>
+      <p>Ce site ne dépose aucun cookie et n'utilise aucun outil de mesure d'audience. Le logiciel n'envoie des rapports d'erreur qu'avec votre accord, sans nom ni adresse IP. Le détail des données, de leurs destinataires, de leur durée de conservation et de vos droits figure sur la page <a href="confidentialite.html">Confidentialité</a>.</p>
+    </section>
+
+    <section>
+      <h2><svg class="ic"><use href="#i-scale"/></svg>Droit applicable</h2>
+      <p>Ce site et ces mentions sont soumis au droit français.</p>
+    </section>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div>
+        <a class="brand" href="index.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#00e5ff" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M12,1.8 L20.8,6.9 L20.8,17.1 L12,22.2 L3.2,17.1 L3.2,6.9 Z M8,9 L12,15.6 L16,9"/></svg>
+          VORTEX CONTROL
+        </a>
+        <p>Chaque ventilateur, chaque écran, sous contrôle. Logiciel gratuit pour Windows 10 et 11, sans publicité et sans compte.</p>
+      </div>
+      <div>
+        <h4>Aide</h4>
+        <ul>
+          <li><a href="notice.html">Notice d'utilisation</a></li>
+          <li><a href="index.html#questions">Questions fréquentes</a></li>
+          <li><a href="https://github.com/Rafale-78/vortex-control/issues">Signaler un problème</a></li>
+          <li><a class="mail" data-u="vortex.support.contact" data-d="gmail.com">vortex.support.contact [arobase] gmail.com</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Informations</h4>
+        <ul>
+          <li><a href="https://github.com/Rafale-78/vortex-control/releases/latest">Toutes les versions</a></li>
+          <li><a href="mentions-legales.html" aria-current="page">Mentions légales</a></li>
+          <li><a href="confidentialite.html">Confidentialité</a></li>
+          <li><a href="index.html#soutenir" data-soutien hidden>Soutenir VORTEX</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="legal">VORTEX Control, logiciel gratuit, code fermé. Ce site n'utilise aucun cookie ni aucune mesure d'audience.</div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  // Adresse assemblée dans le navigateur : les robots qui ramassent les adresses dans le code de la page ne la voient pas.
+  document.querySelectorAll("a.mail").forEach(function (a) {
+    var address = a.dataset.u + "@" + a.dataset.d;
+    a.href = "mailto:" + address;
+    a.textContent = address;
+  });
+
+  var top = document.getElementById("top");
+  function onScroll() { top.classList.toggle("scrolled", window.scrollY > 8); }
+  window.addEventListener("scroll", onScroll, { passive: true });
+  onScroll();
+
+  var burger = document.querySelector(".burger"), menu = document.getElementById("menu");
+  function setMenu(open) {
+    menu.classList.toggle("open", open);
+    burger.setAttribute("aria-expanded", String(open));
+    burger.setAttribute("aria-label", open ? "Fermer le menu" : "Ouvrir le menu");
+  }
+  burger.addEventListener("click", function () { setMenu(!menu.classList.contains("open")); });
+  menu.addEventListener("click", function (e) { if (e.target.closest("a")) setMenu(false); });
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape") setMenu(false); });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Confidentialité — VORTEX Control</title>
+<meta name="description" content="Ce que VORTEX Control envoie, et surtout ce qu'il n'envoie jamais : rapports d'erreur sur accord seulement, sans nom ni adresse, aucune revente.">
+<meta name="theme-color" content="#05080f">
+<meta name="color-scheme" content="dark">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2300e5ff' stroke-width='1.6' stroke-linejoin='round'%3E%3Cpath d='M12,1.8 L20.8,6.9 L20.8,17.1 L12,22.2 L3.2,17.1 L3.2,6.9 Z M8,9 L12,15.6 L16,9'/%3E%3C/svg%3E">
+<style>
+  :root {
+    --bg: #05080f; --card: rgba(13, 22, 40, .78); --card-hi: rgba(17, 29, 52, .9);
+    --line: rgba(122, 162, 222, .15); --line-hi: rgba(0, 229, 255, .38);
+    --cyan: #00e5ff; --magenta: #ff2bd6; --violet: #7b5cff; --amber: #ffb224; --green: #2bffa3;
+    --text: #e8f0ff; --dim: #a6b5d1; --mute: #7b8cab;
+    --font: "Segoe UI Variable Text", "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+    --display: "Segoe UI Variable Display", "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+    --tech: Bahnschrift, "Segoe UI", system-ui, sans-serif;
+    --ease: cubic-bezier(.2, .7, .2, 1);
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; scroll-padding-top: 88px; -webkit-text-size-adjust: 100%; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.65 var(--font); overflow-x: hidden; }
+  body::before { content: ""; position: fixed; inset: -20vmax; z-index: -2; pointer-events: none; background: radial-gradient(38vmax 30vmax at 78% 12%, rgba(123, 92, 255, .18), transparent 70%), radial-gradient(34vmax 28vmax at 12% 8%, rgba(43, 255, 163, .09), transparent 70%); animation: drift 28s ease-in-out infinite alternate; }
+  body::after { content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none; background: linear-gradient(rgba(0, 229, 255, .045) 1px, transparent 1px) 0 0 / 44px 44px, linear-gradient(90deg, rgba(0, 229, 255, .045) 1px, transparent 1px) 0 0 / 44px 44px; -webkit-mask-image: radial-gradient(ellipse 90% 60% at 50% 0%, #000 30%, transparent 85%); mask-image: radial-gradient(ellipse 90% 60% at 50% 0%, #000 30%, transparent 85%); }
+  @keyframes drift { to { transform: translate3d(4vmax, 3vmax, 0) rotate(8deg); } }
+  a { color: var(--cyan); text-underline-offset: 3px; }
+  code { font-family: "Cascadia Mono", Consolas, monospace; font-size: .88em; color: var(--cyan); background: rgba(0, 229, 255, .07); border-radius: 5px; padding: 1px 4px; white-space: nowrap; }
+  .wrap { width: min(1180px, 100% - 40px); margin-inline: auto; }
+  .ic { width: 22px; height: 22px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+  .skip { position: absolute; left: 12px; top: -60px; z-index: 100; background: var(--cyan); color: #021016; padding: 10px 16px; border-radius: 8px; font-weight: 700; }
+  .skip:focus { top: 12px; }
+  :focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; border-radius: 6px; }
+
+  .top { position: sticky; top: 0; z-index: 50; transition: background .3s, border-color .3s, box-shadow .3s; border-bottom: 1px solid transparent; }
+  .top.scrolled { background: rgba(5, 8, 15, .78); -webkit-backdrop-filter: blur(14px) saturate(140%); backdrop-filter: blur(14px) saturate(140%); border-bottom-color: var(--line); box-shadow: 0 10px 30px rgba(0, 0, 0, .25); }
+  .top .wrap { display: flex; align-items: center; gap: 20px; height: 68px; }
+  .brand { display: flex; align-items: center; gap: 11px; color: var(--text); text-decoration: none; font: 700 15px/1 var(--tech); letter-spacing: .14em; margin-right: auto; }
+  .brand svg { width: 30px; height: 30px; filter: drop-shadow(0 0 8px rgba(0, 229, 255, .5)); }
+  .menu { display: flex; align-items: center; gap: 4px; }
+  .menu a:not(.btn) { color: var(--dim); text-decoration: none; font-size: 14.5px; padding: 8px 12px; border-radius: 8px; transition: color .2s, background .2s; }
+  .menu a:not(.btn):hover { color: var(--text); background: rgba(255, 255, 255, .05); }
+  .menu .btn { margin-left: 10px; }
+  .burger { display: none; background: none; border: 1px solid var(--line); color: var(--text); width: 42px; height: 42px; border-radius: 10px; cursor: pointer; place-items: center; }
+  .btn { position: relative; display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 15px 26px; border-radius: 12px; font: 650 16px/1.1 var(--font); text-decoration: none; transition: transform .25s var(--ease), box-shadow .25s; overflow: hidden; isolation: isolate; }
+  .btn-main { color: #021016; background: linear-gradient(100deg, var(--cyan), #57b6ff 55%, #8f8bff); box-shadow: 0 8px 30px rgba(0, 229, 255, .35), inset 0 1px 0 rgba(255, 255, 255, .45); }
+  .btn-main:hover { transform: translateY(-2px); box-shadow: 0 14px 40px rgba(0, 229, 255, .5), inset 0 1px 0 rgba(255, 255, 255, .45); }
+  .btn-sm { padding: 10px 16px; font-size: 14px; border-radius: 10px; }
+
+  .narrow { max-width: 900px; }
+  .page-head { padding: 52px 0 34px; }
+  .kicker { display: inline-block; font: 700 12.5px/1 var(--tech); letter-spacing: .22em; color: var(--green); text-transform: uppercase; margin-bottom: 14px; }
+  h1 { font: 700 clamp(2.2rem, 4.4vw, 3.4rem)/1.06 var(--display); letter-spacing: -.03em; margin: 0 0 16px; }
+  .grad { background: linear-gradient(95deg, var(--green) 0%, var(--cyan) 55%, #7fa8ff 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .lead { color: var(--dim); font-size: 1.1rem; margin: 0; }
+  .chips { display: flex; flex-wrap: wrap; gap: 10px; list-style: none; padding: 0; margin: 24px 0 0; }
+  .chips li { display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; border: 1px solid rgba(43, 255, 163, .3); background: rgba(43, 255, 163, .06); border-radius: 999px; font-size: 14.5px; }
+  .updated { color: var(--mute); font-size: 13.5px; margin: 18px 0 0; }
+  .chips .ic { width: 18px; height: 18px; color: var(--green); stroke-width: 2.2; }
+
+  .doc section { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 28px 32px; margin-bottom: 18px; }
+  .doc h2 { display: flex; align-items: center; gap: 12px; font: 700 clamp(1.25rem, 2.2vw, 1.55rem)/1.2 var(--display); letter-spacing: -.015em; margin: 0 0 14px; }
+  .doc h2 .ic { width: 38px; height: 38px; padding: 8px; border-radius: 10px; color: var(--cyan); background: linear-gradient(140deg, rgba(0, 229, 255, .18), rgba(123, 92, 255, .14)); border: 1px solid rgba(0, 229, 255, .3); }
+  .doc p { margin: 0 0 12px; color: var(--dim); }
+  .doc p:last-child { margin-bottom: 0; }
+  .doc b { color: var(--text); font-weight: 650; }
+  .doc ul { margin: 0 0 14px; padding: 0; list-style: none; }
+  .doc li { position: relative; padding-left: 24px; margin-bottom: 8px; color: var(--dim); }
+  .doc li::before { content: ""; position: absolute; left: 6px; top: .6em; width: 7px; height: 7px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 8px rgba(0, 229, 255, .7); }
+  .doc .never { border-color: rgba(43, 255, 163, .25); background: radial-gradient(500px 220px at 0% 0%, rgba(43, 255, 163, .08), transparent 70%), var(--card); }
+  .doc .never h2 .ic { color: var(--green); background: rgba(43, 255, 163, .1); border-color: rgba(43, 255, 163, .35); }
+  .doc .never li { padding-left: 32px; }
+  .doc .never li::before { content: none; }
+  .doc .never li .ic { position: absolute; left: 0; top: 2px; width: 20px; height: 20px; color: var(--green); stroke-width: 2.2; }
+
+  footer { margin-top: 80px; border-top: 1px solid var(--line); padding: 44px 0 56px; color: var(--mute); font-size: 14px; }
+  .foot { display: grid; grid-template-columns: 1.3fr 1fr 1fr; gap: 32px; margin-bottom: 30px; }
+  .foot h4 { color: var(--text); font: 650 14px/1 var(--display); margin: 4px 0 14px; letter-spacing: .02em; }
+  .foot ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
+  .foot a { color: var(--dim); text-decoration: none; }
+  .foot a:hover { color: var(--cyan); }
+  .foot p { margin: 12px 0 0; max-width: 30em; }
+  .legal { border-top: 1px solid var(--line); padding-top: 22px; font-size: 13px; line-height: 1.7; }
+  [hidden] { display: none !important; }
+
+  @media (max-width: 860px) {
+    .burger { display: grid; }
+    .menu { position: absolute; top: 68px; left: 0; right: 0; flex-direction: column; align-items: stretch; gap: 2px; padding: 12px 20px 20px; background: rgba(5, 8, 15, .96); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); border-bottom: 1px solid var(--line); transform: translateY(-8px); opacity: 0; visibility: hidden; transition: opacity .25s, transform .25s, visibility .25s; }
+    .menu.open { transform: none; opacity: 1; visibility: visible; }
+    .menu a:not(.btn) { padding: 12px 10px; font-size: 16px; }
+    .menu .btn { margin: 8px 0 0; }
+    .foot { grid-template-columns: 1fr 1fr; }
+    .foot > div:first-child { grid-column: 1 / -1; }
+  }
+  @media (max-width: 560px) {
+    .wrap { width: calc(100% - 32px); }
+    .doc section { padding: 22px 20px; }
+    .doc h2 .ic { width: 34px; height: 34px; padding: 7px; }
+    code { white-space: normal; overflow-wrap: anywhere; }
+    .foot { grid-template-columns: 1fr; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#contenu">Aller au contenu</a>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-down" viewBox="0 0 24 24"><path d="M12 3.5v11.5M7 10.5l5 5 5-5M5 20.5h14"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M4 11l8-6.5 8 6.5"/><path d="M6 9.5V20h12V9.5"/></symbol>
+  <symbol id="i-bug" viewBox="0 0 24 24"><rect x="7" y="7" width="10" height="13" rx="5"/><path d="M12 11v9M9 4.5l1.5 2.5M15 4.5L13.5 7M3.5 13H7M17 13h3.5M4.5 8.5L7 10M19.5 8.5L17 10M4.5 18L7 16.5M19.5 18L17 16.5"/></symbol>
+  <symbol id="i-eye-off" viewBox="0 0 24 24"><path d="M3 12s3.4-6 9-6c1.6 0 3 .4 4.2 1M21 12s-3.4 6-9 6c-1.6 0-3-.4-4.2-1"/><path d="M4 4l16 16"/></symbol>
+  <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3.4 3 14.6 0 18M12 3c-3 3.4-3 14.6 0 18"/></symbol>
+  <symbol id="i-window" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M7 6.5h.01M10 6.5h.01"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.6"/><path d="M5 20c.8-3.4 3.6-5.4 7-5.4s6.2 2 7 5.4"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 4.6-3.4 8-8 9-4.6-1-8-4.4-8-9V6z"/><path d="M8.6 12.2l2.4 2.4 4.4-4.8"/></symbol>
+  <symbol id="i-key" viewBox="0 0 24 24"><circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M16 7l3 3M14 9l2 2"/></symbol>
+</svg>
+
+<header class="top" id="top">
+  <div class="wrap">
+    <a class="brand" href="index.html" aria-label="VORTEX Control, accueil">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#00e5ff" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M12,1.8 L20.8,6.9 L20.8,17.1 L12,22.2 L3.2,17.1 L3.2,6.9 Z M8,9 L12,15.6 L16,9"/></svg>
+      VORTEX CONTROL
+    </a>
+    <button class="burger" type="button" aria-expanded="false" aria-controls="menu" aria-label="Ouvrir le menu"><svg class="ic"><use href="#i-menu"/></svg></button>
+    <nav class="menu" id="menu" aria-label="Menu principal">
+      <a href="index.html#fonctions">Fonctions</a>
+      <a href="index.html#captures">Captures</a>
+      <a href="index.html#installer">Installer</a>
+      <a href="index.html#questions">Questions</a>
+      <a href="notice.html">Notice</a>
+      <a href="index.html#soutenir" data-soutien hidden>Soutenir</a>
+      <a class="btn btn-main btn-sm" href="https://github.com/Rafale-78/vortex-control/releases/download/v2.0.1/VORTEX-Control-Setup-2.0.1.exe"><svg class="ic"><use href="#i-down"/></svg>Télécharger</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap narrow" id="contenu">
+  <div class="page-head">
+    <span class="kicker">Confidentialité</span>
+    <h1>Vos données <span class="grad">restent chez vous</span></h1>
+    <p class="lead">En résumé : VORTEX n'affiche aucune publicité, ne demande aucun compte et ne vend aucune donnée. Seuls des rapports d'erreur, sans nom ni adresse IP, peuvent être envoyés, et uniquement si vous l'acceptez. Vous pouvez changer d'avis à tout moment.</p>
+    <ul class="chips">
+      <li><svg class="ic"><use href="#i-check"/></svg>Aucun compte</li>
+      <li><svg class="ic"><use href="#i-check"/></svg>Aucune publicité</li>
+      <li><svg class="ic"><use href="#i-check"/></svg>Aucune revente</li>
+      <li><svg class="ic"><use href="#i-check"/></svg>Rapports d'erreur sur accord</li>
+    </ul>
+    <p class="updated">Dernière mise à jour : 22 octobre 2026.</p>
+  </div>
+
+  <div class="doc">
+    <section>
+      <h2><svg class="ic"><use href="#i-user"/></svg>Qui est responsable ?</h2>
+      <p>Le responsable des traitements décrits sur cette page est l'éditeur de VORTEX Control, personne physique agissant à titre non professionnel sous le nom <b>VORTEX</b> (voir les <a href="mentions-legales.html">mentions légales</a>). Pour toute question ou demande sur vos données : <a class="mail" data-u="vortex.support.contact" data-d="gmail.com">vortex.support.contact [arobase] gmail.com</a>.</p>
+    </section>
+
+    <section>
+      <h2><svg class="ic"><use href="#i-home"/></svg>Ce qui reste sur votre PC</h2>
+      <p>Vos réglages, votre historique de températures, le suivi d'usure des ventilateurs et le journal de VORTEX sont enregistrés dans <code>%AppData%\VORTEX Control</code>, sur votre PC uniquement. VORTEX ne les envoie nulle part. À la désinstallation, vous pouvez choisir de les supprimer. Le rapport de santé et le rapport de bug (Aide → Journal) sont de simples fichiers créés dans votre dossier Téléchargements : vous décidez vous-même de les partager.</p>
+    </section>
+
+    <section>
+      <h2><svg class="ic"><use href="#i-bug"/></svg>Rapports d'erreur et compteur d'utilisation (sur accord)</h2>
+      <p><b>Pourquoi :</b> une seule finalité, améliorer la fiabilité de VORTEX : corriger les erreurs, comprendre pourquoi un ventilateur, un disque ou un écran n'est pas reconnu afin de reconnaître plus de matériel, et mesurer, pour chaque version, combien de PC l'utilisent et quelle part des lancements se passe sans plantage.</p>
+      <p><b>Sur quelle base :</b> votre consentement (article 6, 1, a, du RGPD), qui couvre aussi la lecture d'informations sur votre PC (article 82 de la loi Informatique et Libertés). Au premier lancement, VORTEX vous demande votre accord, et vous le redemande si ce qui est envoyé change. <b>Sans réponse ou en cas de refus, rien n'est envoyé</b>, et VORTEX fonctionne exactement de la même façon. Vous pouvez retirer votre accord à tout moment dans Réglages → Confidentialité : les envois s'arrêtent aussitôt (ce retrait ne remet pas en cause les envois déjà faits).</p>
+      <p><b>Ce qui est envoyé, si vous acceptez :</b></p>
+      <ul>
+        <li>le texte des erreurs et l'endroit du programme où elles se produisent ;</li>
+        <li>les dernières lignes du journal de VORTEX (événements, noms de profils, d'écrans et de programmes surveillés, températures), anonymisées ;</li>
+        <li>la version de VORTEX et de Windows, la langue, et si VORTEX a les droits d'administrateur ;</li>
+        <li>le matériel : modèle du processeur, de la carte graphique et des puces de ventilateurs, nombre de ventilateurs et de sondes ;</li>
+        <li>quand un ventilateur, un disque ou un écran n'est pas reconnu (une fois par version de VORTEX) : la raison trouvée par le dépannage, le fabricant et le modèle de la carte mère et du PC, s'il s'agit d'un portable, les puces de la carte mère trouvées, si un autre logiciel de ventilateurs est ouvert, et le modèle et le branchement (HDMI, USB…) du disque ou de l'écran concerné, sans numéro de série ;</li>
+        <li>une session par lancement (compteur d'utilisation) et un numéro tiré au hasard sur votre PC, pour compter les PC qui utilisent chaque version, et non les personnes.</li>
+      </ul>
+      <p>Ces données ne contiennent ni votre nom, ni votre adresse e-mail, ni le nom de votre PC, ni votre adresse IP. Reliées entre elles par ce numéro tiré au hasard, elles restent des données « pseudonymes » au sens du RGPD : c'est pourquoi elles sont traitées avec les garanties décrites ici.</p>
+      <p><b>Destinataire :</b> Sentry (Functional Software, Inc., États-Unis), qui héberge ces rapports pour le compte de l'éditeur, en tant que sous-traitant, sur des serveurs situés dans l'Union européenne. Sentry étant une société américaine, un accès depuis les États-Unis reste possible : il est encadré par le contrat de sous-traitance de Sentry, qui s'appuie sur le cadre de protection des données UE–États-Unis (Data Privacy Framework) et sur les clauses contractuelles types de la Commission européenne.</p>
+      <p><b>Durée de conservation :</b> 90 jours au plus, puis suppression automatique. 25 rapports d'erreur et 12 signalements de matériel non reconnu au plus par lancement.</p>
+    </section>
+
+    <section class="never">
+      <h2><svg class="ic"><use href="#i-eye-off"/></svg>Ce qui n'est jamais envoyé</h2>
+      <ul>
+        <li><svg class="ic"><use href="#i-check"/></svg>votre nom, votre adresse e-mail, le nom de votre PC ;</li>
+        <li><svg class="ic"><use href="#i-check"/></svg>votre adresse IP (VORTEX ne la met pas dans les rapports et Sentry ne l'enregistre pas) ;</li>
+        <li><svg class="ic"><use href="#i-check"/></svg>vos fichiers ;</li>
+        <li><svg class="ic"><use href="#i-check"/></svg>vos dossiers : dans les textes envoyés, votre dossier personnel est masqué et tout chemin de dossier est retiré (seul le nom du fichier reste).</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2><svg class="ic"><use href="#i-globe"/></svg>Connexions à internet</h2>
+      <p>En dehors des rapports d'erreur acceptés, VORTEX ne se connecte à internet que si vous le demandez (« Rechercher une mise à jour », test de connexion) ou si vous avez activé la mise à jour automatique. Pour une mise à jour, il lit seulement le fichier de version publié sur GitHub et télécharge l'installeur, dont l'empreinte et la signature sont vérifiées avant toute installation. Comme pour toute visite d'un site, GitHub (GitHub, Inc.) voit alors votre adresse IP et la traite selon sa propre <a href="https://docs.github.com/fr/site-policy/privacy-policies/github-general-privacy-statement">déclaration de confidentialité</a> ; l'éditeur de VORTEX ne reçoit rien.</p>
+      <p>Le test de connexion, lancé seulement à votre demande, contacte brièvement quelques sites très courants pour savoir d'où vient un éventuel problème : www.microsoft.com, www.msftconnecttest.com, www.google.com, www.cloudflare.com, github.com et objects.githubusercontent.com. Rien n'est envoyé à ces sites, à part la demande elle-même, comme pour toute visite (votre adresse IP leur est donc visible).</p>
+      <p>« Signaler un problème » ouvre une page GitHub déjà remplie (version, modèle des puces) : rien n'est envoyé par VORTEX, vous relisez l'ensemble et choisissez de valider ou non, avec votre propre compte GitHub.</p>
+    </section>
+
+    <section>
+      <h2><svg class="ic"><use href="#i-window"/></svg>Ce site</h2>
+      <p>Ce site ne dépose aucun cookie, n'utilise aucun outil de mesure d'audience et ne charge aucune police ni aucun script de sites tiers. Il est hébergé par GitHub Pages : GitHub enregistre l'adresse IP des visiteurs pour la sécurité de son service, selon sa propre <a href="https://docs.github.com/fr/site-policy/privacy-policies/github-general-privacy-statement">déclaration de confidentialité</a>. L'éditeur n'a pas accès à ces journaux.</p>
+    </section>
+
+    <section>
+      <h2><svg class="ic"><use href="#i-key"/></svg>Vos droits</h2>
+      <p>Vous disposez d'un droit d'accès, de rectification, d'effacement, de limitation et de portabilité des données qui vous concernent, et du droit de retirer votre consentement à tout moment.</p>
+      <p>Comme les rapports ne contiennent ni nom, ni adresse e-mail, ni adresse IP, l'éditeur ne peut pas les relier à vous sans votre aide : indiquez dans votre demande le numéro de votre PC, affiché dans Réglages → Confidentialité. Écrivez à <a class="mail" data-u="vortex.support.contact" data-d="gmail.com">vortex.support.contact [arobase] gmail.com</a> ; une réponse vous est apportée dans un délai d'un mois.</p>
+      <p>Si vous estimez que vos droits ne sont pas respectés, vous pouvez adresser une réclamation à la CNIL (<a href="https://www.cnil.fr/fr/plaintes">www.cnil.fr</a>).</p>
+    </section>
+
+    <section>
+      <h2><svg class="ic"><use href="#i-shield"/></svg>Sécurité et engagements</h2>
+      <ul>
+        <li>les rapports sont transmis de manière chiffrée (HTTPS) ;</li>
+        <li>aucune décision automatisée ni aucun profilage n'est réalisé à partir de ces données ;</li>
+        <li>aucune donnée n'est vendue, louée ni utilisée à des fins publicitaires ;</li>
+        <li>si VORTEX devait envoyer de nouvelles informations, il vous redemanderait votre accord, et cette page serait mise à jour.</li>
+      </ul>
+    </section>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div>
+        <a class="brand" href="index.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#00e5ff" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M12,1.8 L20.8,6.9 L20.8,17.1 L12,22.2 L3.2,17.1 L3.2,6.9 Z M8,9 L12,15.6 L16,9"/></svg>
+          VORTEX CONTROL
+        </a>
+        <p>Chaque ventilateur, chaque écran, sous contrôle. Logiciel gratuit pour Windows 10 et 11, sans publicité et sans compte.</p>
+      </div>
+      <div>
+        <h4>Aide</h4>
+        <ul>
+          <li><a href="notice.html">Notice d'utilisation</a></li>
+          <li><a href="index.html#questions">Questions fréquentes</a></li>
+          <li><a href="https://github.com/Rafale-78/vortex-control/issues">Signaler un problème</a></li>
+          <li><a class="mail" data-u="vortex.support.contact" data-d="gmail.com">vortex.support.contact [arobase] gmail.com</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Informations</h4>
+        <ul>
+          <li><a href="https://github.com/Rafale-78/vortex-control/releases/latest">Toutes les versions</a></li>
+          <li><a href="mentions-legales.html">Mentions légales</a></li>
+          <li><a href="confidentialite.html" aria-current="page">Confidentialité</a></li>
+          <li><a href="index.html#soutenir" data-soutien hidden>Soutenir VORTEX</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="legal">VORTEX Control, logiciel gratuit, code fermé. Ce site n'utilise aucun cookie ni aucune mesure d'audience.</div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  // Adresse assemblée dans le navigateur : les robots qui ramassent les adresses dans le code de la page ne la voient pas.
+  document.querySelectorAll("a.mail").forEach(function (a) {
+    var address = a.dataset.u + "@" + a.dataset.d;
+    a.href = "mailto:" + address;
+    a.textContent = address;
+  });
+
+  var top = document.getElementById("top");
+  function onScroll() { top.classList.toggle("scrolled", window.scrollY > 8); }
+  window.addEventListener("scroll", onScroll, { passive: true });
+  onScroll();
+
+  var burger = document.querySelector(".burger"), menu = document.getElementById("menu");
+  function setMenu(open) {
+    menu.classList.toggle("open", open);
+    burger.setAttribute("aria-expanded", String(open));
+    burger.setAttribute("aria-label", open ? "Fermer le menu" : "Ouvrir le menu");
+  }
+  burger.addEventListener("click", function () { setMenu(!menu.classList.contains("open")); });
+  menu.addEventListener("click", function (e) { if (e.target.closest("a")) setMenu(false); });
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape") setMenu(false); });
+})();
+</script>
+</body>
+</html>
