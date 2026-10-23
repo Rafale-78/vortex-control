@@ -1,8 +1,8 @@
 {
-    "version":  "2.0.2",
+    "version":  "2.0.3",
     "url":  "https://github.com/Rafale-78/vortex-control/releases/latest",
-    "installer":  "https://github.com/Rafale-78/vortex-control/releases/download/v2.0.2/VORTEX-Control-Setup-2.0.2.exe",
-    "sha256":  "5f5202dab93a2b3629b45a6ce4cfb9d897c0a0ece9c473f8effc7090547b3eb3",
-    "signature":  "aVJCfhXf34Y+MCrBlCi1GvVQrql3Y07tYGHyRYid2YqtDfDSfp5T7WsJ6/uZaUwGXSnnShYQqfsNNmJtAAxYuw==",
+    "installer":  "https://github.com/Rafale-78/vortex-control/releases/download/v2.0.3/VORTEX-Control-Setup-2.0.3.exe",
+    "sha256":  "da7dd41dc2dd868164fea632fab4187d37003d0e3eb0046555f51a02569ddd35",
+    "signature":  "U5LietVr5nlqYYYE7tblWK2dvTnx7GsgCLIAoDfPwFgkjpnMgpkV8rvsSatlHAsHnxXpnTTFBnl51/8U0apTIw==",
     "notes":  ""
 }
