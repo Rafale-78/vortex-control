@@ -4,7 +4,7 @@ Logiciel gratuit pour Windows 10/11 (64 bits) : pilote chaque ventilateur du PC 
 
 **Télécharger :** [dernière version](../../releases/latest) → `VORTEX-Control-Setup-x.y.z.exe` (tout est inclus : .NET et le pilote PawnIO).
 **Présentation et notice :** [rafale-78.github.io/vortex-control](https://rafale-78.github.io/vortex-control/).
-**Un problème ?** Le bouton « Signaler un problème » de l'application ouvre un [ticket](../../issues) déjà rempli avec votre version et votre matériel (rien de personnel).
+**Un problème ?** Le bouton « Signaler un problème » de l'application ouvre une fenêtre pour le décrire et l'envoyer directement, avec le rapport technique si vous le souhaitez.
 **Contact :** `vortex.support.contact` (arobase) `gmail.com`.
 
 Windows peut afficher « Windows a protégé votre ordinateur » : VORTEX n'est pas encore signé par un certificat payant. Cliquez sur *Informations complémentaires*, puis *Exécuter quand même*. Les empreintes SHA-256 des fichiers figurent dans `SHA256SUMS.txt`.
